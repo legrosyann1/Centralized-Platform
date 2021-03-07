@@ -7,6 +7,7 @@ REQUIREMENTS:
 - postgresql
 - python-dotenv 
 - psycopg2
+- djangorestframework
 
 - Node.js/npm
 - Vue (npm install vue)
@@ -30,3 +31,4 @@ STEPS:
 9. Install python-dotenv in virtual environment: (backend) $ pip install python-dotenv
 10. Create .env file and create new environment variables
 11. Install psycopg2: (backend) $ pip install psycopg2
+12. Install djangorestframework:  (backend) $ pip install djangorestframework

@@ -1,5 +1,14 @@
-from django.http import HttpResponse
+from django.contrib.auth.models import User, Group
+from rest_framework import viewsets
+from rest_framework import permissions
+from .models import Device
+from .serializers import DevicesSerializer
 
 
-def inventory(request):
-    return HttpResponse("Hello, world. You're at the inventory.")
+class DevicesViewSet(viewsets.ModelViewSet):
+    """
+    A simple ViewSet for viewing and editing accounts.
+    """
+    queryset = Device.objects.all()
+    serializer_class = DevicesSerializer
+    permission_classes = [permissions.IsAuthenticated]
