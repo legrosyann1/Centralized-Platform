@@ -10,7 +10,7 @@ REQUIREMENTS:
 - djangorestframework
 
 - Node.js/npm
-- Vue (npm install vue)
+- Vue CLI
 
 
 STEPS:
@@ -32,3 +32,7 @@ STEPS:
 10. Create .env file and create new environment variables
 11. Install psycopg2: (backend) $ pip install psycopg2
 12. Install djangorestframework:  (backend) $ pip install djangorestframework
+13. Install node.js/npm
+14. Install vue command line: $ npm install -g @vue/cli
+15. Create new project: $ vue create frontend
+
