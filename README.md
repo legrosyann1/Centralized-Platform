@@ -35,4 +35,11 @@ STEPS:
 13. Install node.js/npm
 14. Install vue command line: $ npm install -g @vue/cli
 15. Create new project: $ vue create frontend
+16. Add vue-router to frontend for routing: $ vue add router
+17. Add axios to frontend for http requests: $ npm install axios --save
+18. Add vuetify to frontend for styling: $ vue add vuetify
+19. Add gsap to frontend for animations: $ npm install gsap
+20. Add a middleware to allow the resources to be accessed on other domains thorugh CORS headers: (backend) $ python -m pip install django-cors-headers
+21. Add JSON Web Token based Authorisation: (backend) $ pip install djangorestframework-jwt
+22. Install vuex to manage app state: $ npm install vuex --save
 
