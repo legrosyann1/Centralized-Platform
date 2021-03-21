@@ -10,6 +10,7 @@ export default new Vuex.Store({
     authUser: {},
     isAuthenticated: false,
     jwt: localStorage.getItem('token'),
+    drawer: null,
     endpoints: {
       obtainJWT: apiBaseUrl + 'obtain_token',
       refreshJWT: apiBaseUrl + 'refresh_token',

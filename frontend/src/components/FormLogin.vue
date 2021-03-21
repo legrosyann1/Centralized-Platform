@@ -2,6 +2,14 @@
   <div class="mt-14" v-if="!isAuthenticated">
     <v-form lazy-validation>
       <v-container>
+        <!--v-row>
+          <v-spacer></v-spacer>
+          <v-col cols="auto">
+            <v-img class= "animacion" src="../assets/logo_large.png" width="270px"></v-img>
+            <br>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row-->
         <v-row>
           <v-spacer></v-spacer>
           <v-col cols="10" sm="6">
