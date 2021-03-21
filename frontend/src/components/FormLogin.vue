@@ -65,8 +65,7 @@ import axios from 'axios';
 import gsap from 'gsap';
 
 export default {
-    name:"FormLogin",
-
+  name:"FormLogin",
   data() {
     return {
       username: 'yannlegros',
