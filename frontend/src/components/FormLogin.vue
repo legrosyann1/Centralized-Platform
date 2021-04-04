@@ -92,7 +92,6 @@ export default {
     },
 
     authenticate(){
-
       axios
         .post(this.$store.state.endpoints.obtainJWT, {
           "username": this.username,
@@ -101,7 +100,7 @@ export default {
         .then((response) => {
           this.$store.commit('updateToken', response.data.token);
           this.$store.commit('setAuthUser', {
-            "authUser": this.username,
+            "authUser": {'username': this.username,'password': this.password},
             "isAuthenticated": true
           });
           this.$router.push({name: 'Home'})

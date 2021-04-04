@@ -1,61 +1,59 @@
-"use strict";
-
-import Vue from 'vue';
 import axios from "axios";
+import store from '../plugins/vuex.js';
 
-// Full config:  https://github.com/axios/axios#request-config
-// axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
-let config = {
-  // baseURL: process.env.baseURL || process.env.apiUrl || ""
-  // timeout: 60 * 1000, // Timeout
-  // withCredentials: true, // Check cross-site Access-Control
-};
-
-const _axios = axios.create(config);
-
-_axios.interceptors.request.use(
-  function(config) {
-    // Do something before request is sent
-    return config;
-  },
-  function(error) {
-    // Do something with request error
-    return Promise.reject(error);
+var jwt = 'JWT ' + store.state.jwt
+const http = axios.create({
+  baseURL: store.state.endpoints.baseUrl,
+  headers: {
+    "Content-type": "application/json",
+    "Authorization": jwt
   }
-);
+});
 
-// Add a response interceptor
-_axios.interceptors.response.use(
-  function(response) {
-    // Do something with response data
-    return response;
-  },
-  function(error) {
-    // Do something with response error
-    return Promise.reject(error);
+http.interceptors.request.use(function (response) {
+  // Return a successful response back to the calling service
+  return response;
+}, function (error) {
+  // Return any error which is not due to authentication back to the calling service
+  if (error.response.status !== 401) {
+    return new Promise((resolve, reject) => {
+      reject(error);
+    });
   }
-);
 
-Plugin.install = function(Vue) {
-  Vue.axios = _axios;
-  window.axios = _axios;
-  Object.defineProperties(Vue.prototype, {
-    axios: {
-      get() {
-        return _axios;
-      }
-    },
-    $axios: {
-      get() {
-        return _axios;
-      }
-    },
-  });
-};
+  // Logout user if token refresh didn't work or user is disabled
+  if (error.config.url == '/refresh_token' || error.response.message == 'Account is disabled.') {
+    this.$store.commit('removeToken');
+    this.$store.commit('setAuthUser', {
+      "authUser": {},
+      "isAuthenticated": false
+    });
+    this.$router.push({ name: 'Login' });
+    return new Promise((resolve, reject) => {
+      reject(error);
+    });
+  }
 
-Vue.use(Plugin)
+  // Try request again with new token
+  axios
+    .post(this.$store.state.endpoints.obtainJWT, {
+      "username": this.$store.state.authUser.username,
+      "password": this.$store.state.authUser.password
+    })
+    .then((response) => {
+      this.$store.commit('updateToken', response.data.token);
+      http.defaults.headers.common['Authorization'] = response.data.token;
+      return response;
+    })
+    .catch((error) => {
+      this.$store.commit('removeToken');
+      this.$store.commit('setAuthUser', {
+        "authUser": {},
+        "isAuthenticated": false
+      });
+      this.$router.push({name: 'Login'})
+      Promise.reject(error);
+    })
+});
 
-export default Plugin;
+export default http

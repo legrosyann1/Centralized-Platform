@@ -8,9 +8,19 @@ REQUIREMENTS:
 - python-dotenv 
 - psycopg2
 - djangorestframework
+- django-cors-headers
+- djangorestframework-jwt
 
 - Node.js/npm
 - Vue CLI
+- router
+- axios
+- vuetify
+- gsap
+- vuex
+- jspdf
+- jspdf-autotable
+- xlsx
 
 
 STEPS:
@@ -42,4 +52,6 @@ STEPS:
 20. Add a middleware to allow the resources to be accessed on other domains thorugh CORS headers: (backend) $ python -m pip install django-cors-headers
 21. Add JSON Web Token based Authorisation: (backend) $ pip install djangorestframework-jwt
 22. Install vuex to manage app state: $ npm install vuex --save
+23. Install jspdf and plugin to generate PDF files: $ npm install jspdf jspdf-autotable
+24. Install xlsx to generate Excel files: $ npm install xlsx
 

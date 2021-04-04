@@ -31,7 +31,7 @@
             v-on="on"
           >
             <v-icon>mdi-account</v-icon>
-            {{ $store.state.authUser}}
+            {{ $store.state.authUser.username}}
           </v-btn>
         </template>
         <v-list>
