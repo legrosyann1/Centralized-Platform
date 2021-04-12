@@ -24,6 +24,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Devices.vue')
   },
   {
+    path: '/email',
+    name: 'Email',
+    meta: {
+      requiresAuth: true
+    },
+    icon: 'mdi-email',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Email.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     meta: {
@@ -42,15 +51,6 @@ const routes = [
     icon: 'mdi-login',
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
   },
-  {
-    path: '/email',
-    name: 'Email',
-    meta: {
-      requiresAuth: true
-    },
-    icon: 'mdi-email',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Email.vue')
-  }
 ]
 
 const router = new VueRouter({

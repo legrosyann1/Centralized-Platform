@@ -1,12 +1,15 @@
 <template>
-  <div class="home">
-    <h1>This is the Home page</h1>
-  </div>
+    <div class='home'>
+        <HomeStats/>
+    </div>
 </template>
 
 <script>
-
+import HomeStats from '@/components/HomeStats.vue'
 export default {
-  name: 'Home',
+    name:"Home",
+    components:{
+        HomeStats
+    }
 }
 </script>

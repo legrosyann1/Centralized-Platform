@@ -16,6 +16,7 @@ export default new Vuex.Store({
       refreshJWT: apiBaseUrl + 'refresh_token',
       baseUrl: apiBaseUrl,
     },
+    totaldevices: null,
   },
   mutations: {
     setAuthUser(state, {

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <v-form v-model="isValid">
-      <h1 class="text-h4 mb-8 mt-4 animacion">Request new Automation</h1>
+    <v-form v-model="isValid" class="mx-15">
+      <h1 class="text-h4 mb-8 animacion">Request new Automation</h1>
       <v-text-field class="mb-2" label="Subject" v-model="subject" prepend-icon="mdi-email" :rules="inputRules"></v-text-field>
       <v-textarea class="mb-4" label="Body" v-model="body" prepend-icon="mdi-pencil" :rules="inputRules"></v-textarea>
       <v-file-input chips multiple label="File input" v-model="files"></v-file-input>
