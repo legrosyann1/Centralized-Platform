@@ -24,8 +24,8 @@ http.interceptors.request.use(function (response) {
   // Logout user if token refresh didn't work or user is disabled
   if (error.config.url == '/refresh_token' || error.response.message == 'Account is disabled.') {
     this.$store.commit('removeToken');
-    this.$store.commit('setAuthUser', {
-      "authUser": {},
+    this.$store.commit('setAuthProfile', {
+      "authProfile": {},
       "isAuthenticated": false
     });
     this.$router.push({ name: 'Login' });
@@ -37,8 +37,8 @@ http.interceptors.request.use(function (response) {
   // Try request again with new token
   axios
     .post(this.$store.state.endpoints.obtainJWT, {
-      "username": this.$store.state.authUser.username,
-      "password": this.$store.state.authUser.password
+      "username": this.$store.state.authProfile.user.username,
+      "password": this.$store.state.authProfile.user.password
     })
     .then((response) => {
       this.$store.commit('updateToken', response.data.token);
@@ -47,8 +47,8 @@ http.interceptors.request.use(function (response) {
     })
     .catch((error) => {
       this.$store.commit('removeToken');
-      this.$store.commit('setAuthUser', {
-        "authUser": {},
+      this.$store.commit('setAuthProfile', {
+        "authProfile": {},
         "isAuthenticated": false
       });
       this.$router.push({name: 'Login'})

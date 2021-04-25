@@ -271,7 +271,7 @@
                 </template>
               
                 <template v-slot:item.delete="{ item }">
-                  <v-icon v-if="item.delete === $store.state.authUser.username" @click="deleteComment(item)">mdi-close-circle-outline</v-icon>
+                  <v-icon v-if="item.delete === $store.state.authProfile.user.username" @click="deleteComment(item)">mdi-close-circle-outline</v-icon>
                 </template>
 
                 <template v-slot:item.comment="{ item }">
@@ -280,7 +280,7 @@
                     large
                     persistent
                     @save="updateComment(item)"
-                    v-if="item.delete === $store.state.authUser.username"
+                    v-if="item.delete === $store.state.authProfile.user.username"
                   >
                     <div>{{ item.comment }}</div>
                     <template v-slot:input>
@@ -640,7 +640,7 @@ export default {
     insertComment() {     
       var vm = this;
       http
-        .post("/devicesComments/", {"user": this.$store.state.authUser.username, "comment": vm.comment, "device": vm.current_device.id})
+        .post("/devicesComments/", {"user": this.$store.state.authProfile.user.username, "comment": vm.comment, "device": vm.current_device.id})
         .then(function (response) {
           var data = response.data;
           data["delete"] = data.user;
@@ -656,7 +656,7 @@ export default {
 
     updateComment(item) {     
       var vm = this;
-      var user = this.$store.state.authUser.username; 
+      var user = this.$store.state.authProfile.user.username; 
       http
         .put("/devicesComments/" + item.id + "/", {"user": user, "comment": item.comment, "device": vm.current_device.id})
         .then(function (response) {

@@ -31,7 +31,7 @@
             v-on="on"
           >
             <v-icon>mdi-account</v-icon>
-            {{ $store.state.authUser.username}}
+            {{ $store.state.authProfile.user.username}}
           </v-btn>
         </template>
         <v-list>
@@ -66,8 +66,8 @@ export default {
   methods: {
     click_btn(item){
       if(item.title == 'Logout'){
-        this.$store.commit('setAuthUser', {
-          "authUser": null,
+        this.$store.commit('setAuthProfile', {
+          "authProfile": null,
           "isAuthenticated": false
         });
         this.$store.commit('removeToken');

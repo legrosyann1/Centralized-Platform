@@ -7,7 +7,7 @@ var apiBaseUrl = 'http://127.0.0.1:8000/api/';
 
 export default new Vuex.Store({
   state: {
-    authUser: {},
+    authProfile: {},
     isAuthenticated: false,
     jwt: localStorage.getItem('token'),
     drawer: null,
@@ -19,11 +19,11 @@ export default new Vuex.Store({
     totaldevices: null,
   },
   mutations: {
-    setAuthUser(state, {
-      authUser,
+    setAuthProfile(state, {
+      authProfile,
       isAuthenticated
     }) {
-      Vue.set(state, 'authUser', authUser)
+      Vue.set(state, 'authProfile', authProfile)
       Vue.set(state, 'isAuthenticated', isAuthenticated)
     },
     updateToken(state, newToken) {

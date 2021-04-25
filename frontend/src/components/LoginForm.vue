@@ -92,18 +92,43 @@ export default {
     },
 
     authenticate(){
+      var vm = this;
       axios
         .post(this.$store.state.endpoints.obtainJWT, {
-          "username": this.username,
-          "password": this.password
+          "username": vm.username,
+          "password": vm.password
         })
         .then((response) => {
           this.$store.commit('updateToken', response.data.token);
-          this.$store.commit('setAuthUser', {
-            "authUser": {'username': this.username,'password': this.password},
-            "isAuthenticated": true
-          });
-          this.$router.push({name: 'Home'})
+          
+          const base = {
+            baseURL: this.$store.state.endpoints.baseUrl,
+            headers: {
+              Authorization: `JWT ${this.$store.state.jwt}`,
+              'Content-Type': 'application/json'
+            },
+          }
+          const axiosInstance = axios.create(base)
+            axiosInstance({
+              url: "/users",
+              method: "get",
+              params: {}
+            })
+            .then(function (response){
+              var profiles = response.data;
+              var profile = null
+              profiles.forEach((element) => {
+                if (element.user.username == vm.username){
+                  profile = element
+                }
+              })
+              profile.user['password'] = vm.password;
+              vm.$store.commit('setAuthProfile', {
+                "authProfile": profile,
+                "isAuthenticated": true
+              });
+              vm.$router.push({name: 'Home'})
+            })
         })
         .catch((error) => {
           console.log(error);
