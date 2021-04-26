@@ -4,21 +4,24 @@
       <h1 class="text-h4 mb-8 animacion">Request new Automation</h1>
       <v-text-field class="mb-2" label="Subject" v-model="subject" prepend-icon="mdi-email" :rules="inputRules"></v-text-field>
       <v-textarea class="mb-4" label="Body" v-model="body" prepend-icon="mdi-pencil" :rules="inputRules"></v-textarea>
-      <v-file-input chips multiple label="File input" v-model="files"></v-file-input>
-      <v-dialog v-model="received" color="grey lighten-1" max-width="600px">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn :disabled="!isValid" @click="sendEmail" v-bind="attrs" v-on="on">Send</v-btn>
-        </template>
-        <v-card>
-          <v-card-title id="result_container"></v-card-title>
-        </v-card>
-      </v-dialog>
+      <v-file-input chips label="File input" v-model="file"></v-file-input>
+      <v-btn :disabled="!isValid" @click="sendEmail">Send</v-btn>
     </v-form>
+    <v-snackbar v-model="result_dialog" :timeout="2000" app light class="mb-5">
+      <div class="text-center success--text" v-if="result">
+        Email sent succesfully
+        <v-icon color="success" class="ml-1">mdi-checkbox-marked-circle</v-icon>
+      </div>
+      <div class="text-center red--text" v-else>
+        Failed to send Email
+        <v-icon color="red" class="ml-1">mdi-close-circle</v-icon>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
-//import axios from "../plugins/axios.js";
+import axios from "../plugins/axios.js";
 
 export default {
   name: 'EmailForm',
@@ -27,9 +30,10 @@ export default {
       subject: '',
       body: '', 
       isValid: false,
-      received: false,
+      result: null,
+      result_dialog: false,
       ws: null,
-      files: null,
+      file: null,
       inputRules: [
           value => !!value || 'This field is required'
       ]
@@ -38,26 +42,31 @@ export default {
 
   methods: {
     sendEmail(){
-      console.log(this.subject, this.body);
-      console.log(this.files);
-      /*
+      var vm = this
+      vm.isValid = false
+
       let formData = new FormData();
-      if (this.files){
-        for (let file of this.files) {
-          formData.append("files", file, file.name);
-        }
+      if (vm.file){
+        formData.append("files", vm.file, vm.file.name);
       }
-      formData.append("subject", this.subject);
-      formData.append("body", this.body);
+      formData.append("subject", vm.subject);
+      formData.append("body", vm.body);
 
       axios
         .post("/email", formData)
         .then(function (response) {
-          console.log(response.data);
+          if(response.data == 200){
+            vm.result = true;
+          }else if(response.data == 500){
+            vm.result = false;
+          }
+
+          vm.result_dialog = true
+          vm.isValid = true
         })
         .catch((e) => {
           console.log(e);
-        });*/
+        });
     }
   }    
 }
