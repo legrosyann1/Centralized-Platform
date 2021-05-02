@@ -1,6 +1,6 @@
-from .models import Device, DevicesComment, LogicPartition
+from .models import Device, DeviceComment, LogicPartition, Change, FutureChange
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from datetime import datetime
 
 class LogicPartitionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,17 +20,16 @@ class DeviceListSerializer(serializers.ListSerializer):
         dev_list = []
         for device in devices:
             dev_obj = Device.objects.filter(ip_address=device['ip_address']).first()
-            modified = False
             if dev_obj is not None:
                 for field in reversed(fields):
                     if (device.get(field.name) is not None) and (device.get(field.name) != getattr(dev_obj, field.name)):
-                        modified = True
                         setattr(dev_obj, field.name, device[field.name])
-                        setattr(dev_obj, 'updated_device_time', datetime.now())
-            else:
-                dev_obj = Device.objects.create(**device)
-            if modified:
                 dev_obj.save()
+            else:
+                logPartitions = device.pop('logic_partition')
+                dev_obj = Device.objects.create(**device)
+                for part in logPartitions:
+                    dev_obj.logic_partition.add(part)
             dev_list.append(dev_obj)
         return dev_list
 
@@ -39,12 +38,25 @@ class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         list_serializer_class = DeviceListSerializer
-        #depth = 1
-        fields = '__all__'
-        #exclude = ['created_at']
+        exclude = ['created_at']
         
 
 class CommentsSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
     class Meta:
-        model = DevicesComment
-        fields = "__all__"
+        model = DeviceComment
+        fields = ['id','user','comment','device']
+
+
+class ChangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Change
+        fields = '__all__'
+
+
+class FutureChangeSerializer(serializers.ModelSerializer):
+    executor = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+    rfc = serializers.FileField(max_length=None, allow_empty_file=False, use_url=False)
+    class Meta:
+        model = FutureChange
+        fields = '__all__'

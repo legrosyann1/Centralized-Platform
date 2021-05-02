@@ -1,4 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
+from pathlib import Path
+import os
+from django.core.files.storage import FileSystemStorage
 
 class LogicPartition(models.Model):
     name = models.CharField(max_length=100)
@@ -14,12 +18,10 @@ class Device(models.Model):
         ('down', 'Down')
     ]
 
-    ip_address = models.CharField(max_length=30, null=True)
+    ip_address = models.GenericIPAddressField(protocol='both', unpack_ipv4=False)
     mac_address = models.CharField(max_length=30, null=True)
     name = models.CharField(max_length=100, null=True)
     serial_number = models.CharField(max_length=100, null=True, unique=True)
-    create_time = models.BigIntegerField(null=True)
-    updated_device_time = models.DateTimeField(null=True)
     mode = models.CharField(max_length=30, choices=mode_choices, default='down')
     status = models.CharField(max_length=30, choices=status_choices, default='stable')
     manufacturer = models.CharField(max_length=100, null=True)
@@ -34,13 +36,58 @@ class Device(models.Model):
     fqdn = models.CharField(max_length=300, null=True)
     contact_person = models.CharField(max_length=100, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f'{self.ip_address} - {self.name}'
 
-class DevicesComment(models.Model):
-    user = models.CharField(max_length = 50)
+
+class DeviceComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(null=True)
     device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='comment')
 
     def __str__(self):
         return '{} -- {} -- {}'.format(self.device, self.user, self.comment)
+
+
+class Change(models.Model):
+    change_code = models.CharField(max_length=50, null=True)
+    old_info = models.JSONField()
+    new_info = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+# Verify if files directory exists, if not, create it
+store = Path('/inventory/files/changes/')
+path = str(Path(__file__).parent.absolute().parent) + str(store)
+if os.path.isdir(path):
+    pass
+else:
+    os.makedirs(path)
+
+fs = FileSystemStorage(location=path)
+class FutureChange(models.Model):
+    type_choices = [
+        ('corrective', 'Corrective'),
+        ('evolutionary', 'Evolutionary'),
+        ('pre-approved', 'Pre-approved')
+    ]
+
+    change_code = models.CharField(max_length=13, unique=True) #CH<2digitnumber>-<day><month><year>
+    executor = models.ForeignKey(User, on_delete=models.CASCADE)
+    requestor = models.CharField(max_length=50, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    environment = models.CharField(max_length=50, null=True, blank=True)
+    state = models.CharField(max_length=20, null=True, blank=True)
+    type = models.CharField(max_length=50, choices=type_choices, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    is_urgent = models.BooleanField(default=False, null=True, blank=True)
+    #rfc = models.FileField(upload_to='changes/%Y/%m', null=True)
+    rfc = models.FileField(storage=fs, null=True, blank=True, max_length=None)
+    #rfc_name = models.CharField(max_length=100, null=True, blank=True)

@@ -1,0 +1,16 @@
+This is Template TEST
+
+wpp
+ekahau
+racks - map - pictures - Acces point
+
+floor 4: 46 desks - one user per desk
+floor 3: 138 desks one user per desk
+
+height AP 
+ceiling type
+ceiling height 3 & 4,5
+num desks
+num users
+
+totalAP
