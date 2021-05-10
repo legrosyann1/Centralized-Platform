@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from .models import UserProfile
+from inventory.models import Device
 from .serializers import UserProfileSerializer, GroupSerializer
 from backend.send_mail import Email
 from dotenv import load_dotenv
@@ -33,11 +34,9 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class EmailViewSet(APIView):
-
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         """Sends email, can contain files attached to it"""
-         
         email = Email()
         file = request.data['files']
         resp = email.send(os.getenv("EMAIL_USER"), request.data['subject'], request.data['body'], file, file.name)
@@ -45,3 +44,11 @@ class EmailViewSet(APIView):
             return Response('200')
         else:
             return Response('500')
+
+
+class MetricsViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request):
+        devices = Device.objects.count()
+        data = {'devices': devices}
+        return Response(data)

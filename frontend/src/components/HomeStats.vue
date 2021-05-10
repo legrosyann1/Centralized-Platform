@@ -8,7 +8,7 @@
           color="info"
           icon="mdi-poll"
           title="Devices"
-          value="436"
+          v-bind:value='devices'
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -20,7 +20,7 @@
           color="#4CA"
           icon="mdi-gesture-double-tap"
           title="Actions done"
-          value="1613"
+          value="-"
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -31,7 +31,7 @@
           color="#BF3"
           icon="mdi-alert-octagon"
           title="Actions incompleted"
-          value="4"
+          value="-"
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -42,7 +42,7 @@
           color="#789"
           icon="mdi-database-arrow-down"
           title="Downloaded Backups"
-          value="168"
+          value="-"
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -89,7 +89,7 @@
           color="#607"
           icon="mdi-lifebuoy"
           title="EOL"
-          value="3"
+          value="-"
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -98,21 +98,43 @@
   </div>
 </template>
 
+
 <script>
 import MaterialStatsCard from "./MaterialStatsCard";
 import gsap from "gsap";
+import http from "../plugins/axios.js";
 export default {
   name: "HomeStats",
   components: {
     MaterialStatsCard,
   },
-
+data: () => ({
+    labels: ["12am", "3am", "6am", "9am", "12pm", "3pm", "6pm", "9pm"],
+    value: [200, 675, 410, 390, 310, 460, 250, 240],
+    devices:'-',
+    items_eol:'-',
+    loading:true
+  }),
+  created(){
+    this.getMetrics()
+  },
   mounted() {
     this.animation();
   },
 
   methods:{
-      animation() {
+    getMetrics(){
+      var vm = this
+      http
+        .get("/metrics")
+        .then(function (response) {
+            console.log(response.data)
+            vm.devices = response.data.devices;
+            vm.loading = false
+        });
+    },
+    
+    animation() {
       gsap.from(".animacion", {
         duration: 0.3,
         y: -100,
@@ -122,11 +144,8 @@ export default {
       });
     },
   },
-  data: () => ({
-    labels: ["12am", "3am", "6am", "9am", "12pm", "3pm", "6pm", "9pm"],
-    value: [200, 675, 410, 390, 310, 460, 250, 240],
-  }),
 };
+
 </script>
 
 <style>

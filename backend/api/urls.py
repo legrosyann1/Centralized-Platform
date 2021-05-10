@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from rest_framework_jwt.views import refresh_jwt_token, obtain_jwt_token
-from .views import UserViewSet, GroupViewSet, EmailViewSet
+from .views import UserViewSet, GroupViewSet, EmailViewSet, MetricsViewSet
 from inventory.views import DevicesViewSet, DeviceCommentsViewSet, DeviceChangesViewSet, FutureChangesViewSet
 
 
@@ -16,7 +16,8 @@ router.register(r'changes', FutureChangesViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('email',EmailViewSet.as_view(),name='email'), 
+    path('email',EmailViewSet.as_view(),name='email'),
+    path(r'metrics/', MetricsViewSet.as_view(), name='metrics'), 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('obtain_token', obtain_jwt_token, name="api_token_auth"),
     path('refresh_token', refresh_jwt_token, name="api_token_refresh"),
