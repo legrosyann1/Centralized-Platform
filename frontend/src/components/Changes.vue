@@ -111,7 +111,7 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-autocomplete
                           v-model="state"
-                          :items="['Initial', 'Pending', 'Canceled', 'Completed']"
+                          :items="['Initial', 'Pending', 'Canceled', 'Completed', 'Incompleted']"
                           label="Task state"
                           required
                         ></v-autocomplete>
@@ -370,6 +370,7 @@ export default {
     future_changes: [],
     dialog_future_task: false, 
     parse_type:{'Corrective': 'corrective', 'Evolutionary': 'evolutionary', 'Pre-approved': 'pre-approved'},
+    parse_state:{'Initial': 'created', 'Pending': 'pending', 'Canceled': 'canceled', 'Completed': 'completed', 'Incompleted': 'incompleted'},
     // Created task related
     change_code: "",
     changes: [],
@@ -551,7 +552,7 @@ export default {
           implementer: changes[i].implementer,
           requester: changes[i].requester,
           rfc: changes[i].rfc,
-          state: changes[i].state,
+          state: Object.keys(this.parse_state).find(key => this.parse_state[key] === changes[i].state),
           id: changes[i].id
         }
         var color = null
@@ -627,14 +628,10 @@ export default {
       }
 
       var vm = this
-      var types = Object.keys(this.parse_type)
       if(this.urgent == 'yes'){this.urgent = true
       }else{this.urgent = false}
-      for(var i=0; i<types.length; i++){
-        if(types[i] == this.type){
-          this.type = this.parse_type[types[i]]
-        }
-      }
+      this.type = this.parse_type[this.type]
+      this.state = this.parse_state[this.state]
       formData.append('start_date', this.start_date + 'T' + this.start_time + ':00Z')
       formData.append('end_date', this.end_date + 'T' + this.end_time + ':00Z')
       formData.append('change_code', this.future_change_code)

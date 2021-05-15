@@ -96,6 +96,7 @@
                 </v-icon>
                 Edit
               </v-btn>
+              <DeviceDetail v-bind:device="item"></DeviceDetail>
             </td>
           </template>
 
@@ -425,10 +426,14 @@ import gsap from "gsap";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import XLSX from "xlsx";
+import DeviceDetail from "./DeviceDetail.vue";
 
 export default {
   name: "DevicesTable",
   store,
+  components: {
+    DeviceDetail,
+  },
   data() {
     return {
       title: "Devices",

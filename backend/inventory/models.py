@@ -43,6 +43,18 @@ class Device(models.Model):
         return f'{self.ip_address} - {self.name}'
 
 
+class Interface(models.Model):
+    status_choices = [
+        ('connected', 'Connected'),
+        ('not_connected', 'Not connected'),
+        ('disabled', 'Disabled')
+    ]
+    name = models.CharField(max_length=100, null=True)
+    ip_address = models.GenericIPAddressField(null=True)
+    status = models.CharField(max_length=100, choices=status_choices, null=True)
+    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='interfaces')
+
+
 class DeviceComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(null=True)
@@ -75,13 +87,20 @@ class FutureChange(models.Model):
         ('evolutionary', 'Evolutionary'),
         ('pre-approved', 'Pre-approved')
     ]
+    state_choices = [
+        ('created', 'Created'),
+        ('pending', 'Pending'),
+        ('canceled', 'Canceled'),
+        ('completed', 'Completed'),
+        ('incompleted', 'Incompleted')
+    ]
 
     change_code = models.CharField(max_length=13, unique=True) #CH<2digitnumber>-<day><month><year>
     implementer = models.ForeignKey(User, on_delete=models.CASCADE)
     requester = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     environment = models.CharField(max_length=50, null=True, blank=True)
-    state = models.CharField(max_length=20, null=True, blank=True)
+    state = models.CharField(max_length=20, choices=state_choices, null=True, blank=True)
     type = models.CharField(max_length=50, choices=type_choices, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

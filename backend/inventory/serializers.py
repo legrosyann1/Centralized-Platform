@@ -1,4 +1,4 @@
-from .models import Device, DeviceComment, LogicPartition, Change, FutureChange
+from .models import Device, DeviceComment, LogicPartition, Change, FutureChange, Interface
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -6,6 +6,11 @@ class LogicPartitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LogicPartition
         fields = '__all__'
+
+class InterfaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interface
+        fields = "__all__"
 
 class DeviceListSerializer(serializers.ListSerializer):
     def create(self, devices):
@@ -35,6 +40,7 @@ class DeviceListSerializer(serializers.ListSerializer):
 
 
 class DeviceSerializer(serializers.ModelSerializer):
+    #interfaces = InterfaceSerializer(many=True, read_only=True)
     class Meta:
         model = Device
         list_serializer_class = DeviceListSerializer

@@ -1,10 +1,9 @@
 from rest_framework import viewsets, generics, permissions
-from .models import Device, DeviceComment, LogicPartition, Change, FutureChange 
-from .serializers import DeviceListSerializer, DeviceSerializer, CommentsSerializer, LogicPartitionSerializer, ChangeSerializer, FutureChangeSerializer
+from .models import Device, DeviceComment, LogicPartition, Change, FutureChange, Interface
+from .serializers import DeviceSerializer, CommentsSerializer, InterfaceSerializer, LogicPartitionSerializer, ChangeSerializer, FutureChangeSerializer; InterfaceSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 import os
-from datetime import datetime
 from django.http import  HttpResponse
 from wsgiref.util import FileWrapper
 
@@ -16,14 +15,6 @@ class DevicesViewSet(viewsets.ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def create(self, request):
-        serializer = DeviceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-        else:
-            return Response(serializer.errors)
-        return Response(serializer.data)
 
     @action(detail=True, methods=['get','post'])
     def logical_partitions(self, request, pk=None):
@@ -39,7 +30,26 @@ class DevicesViewSet(viewsets.ModelViewSet):
                 device.logic_partition.clear()
                 for partition in partitions:
                     device.logic_partition.add(partition)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)
+
+    @action(detail=True, methods=['get','post'])
+    def interfaces(self, request, pk=None):
+        if request.method == 'GET':
+            data = Interface.objects.filter(device=pk)
+            serializer = InterfaceSerializer(data, many=True)
             return Response(serializer.data)
+        if request.method == 'POST':
+            for interface in request.data:
+                interface['device'] = pk          
+            serializer = InterfaceSerializer(data=request.data, many=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)
+
 
 
 class DeviceCommentsViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
@@ -64,8 +74,7 @@ class DeviceChangesViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
                 change.save()
                 return Response('200')
             else:
-                print('Not valid Serializer')
-                return Response('500')
+                return Response(serializer.errors)
         else:
             for change in request.data:
                 change_obj = Change.objects.filter(id=change['id']).first()
