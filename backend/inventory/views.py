@@ -18,11 +18,11 @@ class DevicesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request):
-        serializer = DeviceSerializer(data=request.data, many=True)
+        serializer = DeviceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
         else:
-            return Response('500')
+            return Response(serializer.errors)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get','post'])
@@ -49,7 +49,7 @@ class DeviceCommentsViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
 
 
 class DeviceChangesViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
-    queryset = Change.objects.all()
+    queryset = Change.objects.all().order_by('updated_at')
     serializer_class = ChangeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -67,7 +67,6 @@ class DeviceChangesViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
                 print('Not valid Serializer')
                 return Response('500')
         else:
-            # Porque hace falta cuando pk = -1???
             for change in request.data:
                 change_obj = Change.objects.filter(id=change['id']).first()
                 for field in fields:

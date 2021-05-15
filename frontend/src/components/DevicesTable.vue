@@ -60,7 +60,7 @@
           <!-- Icon to select columns to display -->
           <template v-slot:header.data-table-expand="">
             <v-btn
-                @click="dialogCostumHeaders"
+                @click="dialog_costumHeaders = true"
                 icon
               >
                 <v-icon small color="primary">mdi-pencil</v-icon>
@@ -100,7 +100,7 @@
           </template>
 
           <!--  when you click on any icon, one dialog is showed  -->
-          <template v-slot:item.actions="{ item }">
+          <template #item.actions="{ item }">
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn color="primary" v-bind="attrs" v-on="on" icon>
@@ -632,8 +632,8 @@ export default {
       for(var i=0; i<vm.selected_headers.length; i++){
         vm.headers.push(vm.list_headers[vm.selected_headers[i]]);
       }
-      vm.headers.push(vm.list_headers[18]);
-      vm.headers.push(vm.list_headers[19]);
+      vm.headers.push(vm.list_headers[vm.list_headers.length - 2]);
+      vm.headers.push(vm.list_headers[vm.list_headers.length - 1]);
       vm.dialog_costumHeaders = false;
     },
 
@@ -718,10 +718,6 @@ export default {
     dialogActions(value) {
       this.dialog_actions = true;
       this.current_device = value;
-    },
-
-    dialogCostumHeaders(){
-      this.dialog_costumHeaders = true;
     },
 
     dialogStatus(value) {

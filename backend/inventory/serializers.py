@@ -55,8 +55,8 @@ class ChangeSerializer(serializers.ModelSerializer):
 
 
 class FutureChangeSerializer(serializers.ModelSerializer):
-    executor = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
-    rfc = serializers.FileField(max_length=None, allow_empty_file=False, use_url=False)
+    implementer = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+    rfc = serializers.FileField(use_url=False, max_length=None, required=False, allow_null=True)
     class Meta:
         model = FutureChange
         fields = '__all__'

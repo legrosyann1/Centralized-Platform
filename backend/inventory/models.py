@@ -77,8 +77,8 @@ class FutureChange(models.Model):
     ]
 
     change_code = models.CharField(max_length=13, unique=True) #CH<2digitnumber>-<day><month><year>
-    executor = models.ForeignKey(User, on_delete=models.CASCADE)
-    requestor = models.CharField(max_length=50, null=True, blank=True)
+    implementer = models.ForeignKey(User, on_delete=models.CASCADE)
+    requester = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     environment = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=20, null=True, blank=True)
@@ -90,4 +90,3 @@ class FutureChange(models.Model):
     is_urgent = models.BooleanField(default=False, null=True, blank=True)
     #rfc = models.FileField(upload_to='changes/%Y/%m', null=True)
     rfc = models.FileField(storage=fs, null=True, blank=True, max_length=None)
-    #rfc_name = models.CharField(max_length=100, null=True, blank=True)

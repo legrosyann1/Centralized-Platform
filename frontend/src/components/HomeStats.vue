@@ -129,7 +129,7 @@ data: () => ({
         .get("/metrics")
         .then(function (response) {
             console.log(response.data)
-            vm.devices = response.data.devices;
+            vm.devices = response.data.devices.toString();
             vm.loading = false
         });
     },
