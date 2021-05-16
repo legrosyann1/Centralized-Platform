@@ -294,8 +294,8 @@
                       </v-col>
                     </v-row>
                     <v-card-text
-                      v-for="item in selectedEvent.task"
-                      v-bind:key="item"
+                      v-for="(item, index) in selectedEvent.task"
+                      v-bind:key="index"
                     >
                       <v-row class="ml-5">
                         <v-col cols='12' sm='4'>

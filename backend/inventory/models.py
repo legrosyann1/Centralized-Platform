@@ -109,3 +109,14 @@ class FutureChange(models.Model):
     is_urgent = models.BooleanField(default=False, null=True, blank=True)
     #rfc = models.FileField(upload_to='changes/%Y/%m', null=True)
     rfc = models.FileField(storage=fs, null=True, blank=True, max_length=None)
+
+
+class Network(models.Model):
+    network_address = models.GenericIPAddressField(protocol='both')
+    netmask = models.IntegerField()
+    zone = models.CharField(max_length=150, null=True, blank=True)
+    vlan = models.CharField(max_length=100, null=True, blank=True)
+    vrf = models.CharField(max_length=100, null=True, blank=True)
+    firewall = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -15,6 +15,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
   },
   {
+    path: '/change-management',
+    name: 'Change Management',
+    meta: {
+      requiresAuth: true
+    },
+    icon: 'mdi-calendar-month',
+    component: () => import(/* webpackChunkName: "about" */ '../views/ChangeManagement.vue')
+  },
+  {
     path: '/devices',
     name: 'Devices',
     meta: {
@@ -22,6 +31,16 @@ const routes = [
     },
     icon: 'mdi-cellphone-link',
     component: () => import(/* webpackChunkName: "about" */ '../views/Devices.vue')
+  },
+  {
+    path: '/networks',
+    name: 'Network Addressing',
+    id: 'v-step-11',
+    meta:{
+      requiresAuth: true
+    },
+    icon: 'mdi-fire',
+    component: () => import(/* webpackChunkName: "tower" */ '../views/Networks.vue'),
   },
   {
     path: '/email',

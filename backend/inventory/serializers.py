@@ -1,4 +1,4 @@
-from .models import Device, DeviceComment, LogicPartition, Change, FutureChange, Interface
+from .models import Device, DeviceComment, LogicPartition, Change, FutureChange, Interface, Network
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -66,3 +66,9 @@ class FutureChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FutureChange
         fields = '__all__'
+
+
+class NetworkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Network
+        exclude = ['created_at']

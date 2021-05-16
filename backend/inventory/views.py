@@ -1,6 +1,6 @@
 from rest_framework import viewsets, generics, permissions
-from .models import Device, DeviceComment, LogicPartition, Change, FutureChange, Interface
-from .serializers import DeviceSerializer, CommentsSerializer, InterfaceSerializer, LogicPartitionSerializer, ChangeSerializer, FutureChangeSerializer; InterfaceSerializer
+from .models import Device, DeviceComment, LogicPartition, Change, FutureChange, Interface, Network
+from .serializers import DeviceSerializer, CommentsSerializer, InterfaceSerializer, LogicPartitionSerializer, ChangeSerializer, FutureChangeSerializer, NetworkSerializer; InterfaceSerializer, NetworkSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 import os
@@ -16,6 +16,18 @@ class DevicesViewSet(viewsets.ModelViewSet):
     serializer_class = DeviceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request):
+        if type(request.data) is dict:
+            serializer = DeviceSerializer(data=request.data)
+        elif type(request.data) is list:
+            serializer = DeviceSerializer(data=request.data, many=True)
+        
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
     @action(detail=True, methods=['get','post'])
     def logical_partitions(self, request, pk=None):
         if request.method == 'GET':
@@ -24,7 +36,7 @@ class DevicesViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         elif request.method == 'POST':
             serializer = LogicPartitionSerializer(data=request.data, many=True)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 partitions = serializer.save()
                 device = Device.objects.get(pk=pk)
                 device.logic_partition.clear()
@@ -42,9 +54,9 @@ class DevicesViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         if request.method == 'POST':
             for interface in request.data:
-                interface['device'] = pk          
+                interface['device'] = pk
             serializer = InterfaceSerializer(data=request.data, many=True)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
             else:
@@ -67,7 +79,7 @@ class DeviceChangesViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
         fields = Change._meta.get_fields()
         if pk != '-1':
             serializer = ChangeSerializer(data=request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 change = Change.objects.filter(pk=pk).first()
                 for field in fields:
                     setattr(change, field.name, request.data[field.name])
@@ -104,3 +116,22 @@ class FutureChangesViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
             response = HttpResponse(wrapper, content_type='application/force-download')
             response['Content-Disposition'] = 'inline; filename={}'.format(data.rfc.path)
             return response
+
+
+class NetworksViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
+
+    queryset = Network.objects.all()
+    serializer_class = NetworkSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request):
+        if type(request.data) is dict:
+            serializer = NetworkSerializer(data=request.data)
+        elif type(request.data) is list:
+            serializer = NetworkSerializer(data=request.data, many=True)
+        
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
