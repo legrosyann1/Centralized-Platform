@@ -522,19 +522,44 @@ export default {
 
     exportTo(value) {
       var vm = this;
-      var columns = [];
-      var data = [];
-      //var json_devices = []
-      for (var i = 0; i < vm.headers.length - 2; i++) {
-        columns.push(vm.headers[i].text);
-      }
-      if (vm.selected.length == 0) {
-        data = vm.listDevices(vm.items);
-      } else if (vm.selected.length != 0) {
-        data = vm.listDevices(vm.selected);
-      }
-      if (value) {
+
+      if (value == false){
+        vm.loading_excel = true
+        var data_xls = "";
+        var devices = [];
+        if (vm.selected.length == 0) {
+          for (let i=0; i<vm.items.length; i++){
+            let device = vm.items[i]
+            delete device['actions']
+            devices.push(device);
+          }
+          data_xls = XLSX.utils.json_to_sheet(devices);
+        } else {
+          for (let i=0; i<vm.selected.length; i++){
+            let device = vm.selected[i]
+            delete device['actions']
+            devices.push(device);
+          }
+          data_xls = XLSX.utils.json_to_sheet(devices);
+        }
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, data_xls, 'Devices');
+        XLSX.writeFile(workbook, 'Devices.xlsx')
+        vm.loading_excel = false
+      } 
+      
+      else if (value == true){
         vm.loading_pdf = true;
+        var columns = [];
+        var data = [];
+        for (var j = 0; j < vm.headers.length - 2; j++) {
+          columns.push(vm.headers[j].text);
+        }
+        if (vm.selected.length == 0) {
+          data = vm.listDevices(vm.items);
+        } else if (vm.selected.length != 0) {
+          data = vm.listDevices(vm.selected);
+        }
         var doc = new jsPDF();
         var pageNumber = doc.internal.getNumberOfPages();
         doc.autoTable({
@@ -552,46 +577,31 @@ export default {
             font: "helvetica",
           },
           columnStyles: {
-            0: { cellWidth: 30 },
             1: { halign: "center" },
             2: { halign: "center" },
             3: { halign: "center" },
             4: { halign: "center" },
+            5: { halign: "center" },
+            6: { halign: "center" },
           },
         });
         doc.setPage(pageNumber);
         doc.save("Devices.pdf");
-        value = false;
         vm.loading_pdf = false;
-      } else {
-        let data_xls = "";
-        if (vm.selected.length == 0) {
-          data_xls = XLSX.utils.json_to_sheet(vm.items);
-          console.log(vm.items);
-        } else {
-          data_xls = XLSX.utils.json_to_sheet(vm.selected);
-          console.log(vm.selected);
-        }
-        const workbook = XLSX.utils.book_new();
-        const filename = "Devices";
-        XLSX.utils.book_append_sheet(workbook, data_xls, filename);
-        XLSX.writeFile(workbook, `${filename}.xlsx`);
       }
     },
     
     listDevices(devices) {
       var list_devices = [];
       for (var i = 0; i < devices.length; i++) {
-        var device = [
-          devices[i]["name"],
-          devices[i]["ip_address"],
-          devices[i]["mac_address"],
-          devices[i]["serial_number"],
-          devices[i]["zone"],
-          devices[i]["area"],
-          devices[i]["sw_end_of_life"],
-          devices[i]["hw_end_of_life"],
-        ];
+        var device = []
+        for (var j = 0; j < this.headers.length-2; j++){
+          if (this.headers[j].value == 'hw_end_of_life' || this.headers[j].value == 'sw_end_of_life'){
+            device.push(devices[i][this.headers[j].value].substring(0,10) + ' ' + devices[i][this.headers[j].value].substring(11,16))
+          }else {
+            device.push(devices[i][this.headers[j].value])
+          }
+        }
         list_devices.push(device);
       }
       return list_devices;
