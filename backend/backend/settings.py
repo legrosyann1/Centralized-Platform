@@ -45,9 +45,12 @@ INSTALLED_APPS = [
     # Platform apps
     'inventory',
     'api',
+    'actions',
+    'websockets',
     # Third party apps
     'rest_framework',
     'corsheaders',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -174,3 +177,14 @@ EMAIL_HOST_USER = 'noreply.heliosweb@gmail.com'
 EMAIL_HOST_PASSWORD = 'helio$web.'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# Django channels
+ASGI_APPLICATION = "backend.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}

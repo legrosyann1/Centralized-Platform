@@ -1,0 +1,6 @@
+- Save files in dynamic path
+- change url of RFC to: changes/<pk>/downloadFile
+- in changes: getusers for implementer
+- confirm future change
+- put data with same rfc
+- unit testing ansible: https://docs.ansible.com/ansible/latest/dev_guide/testing_units_modules.html
