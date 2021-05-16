@@ -298,6 +298,7 @@ export default {
         .get("/networks")
         .then(function (response) {
           vm.items = response.data;
+          console.log(response.data)
           vm.loading = false;
         })
         .catch((e) => {

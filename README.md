@@ -10,6 +10,8 @@ REQUIREMENTS:
 - djangorestframework
 - django-cors-headers
 - djangorestframework-jwt
+- channels
+- redis
 
 - Node.js/npm
 - Vue CLI
@@ -54,4 +56,6 @@ STEPS:
 22. Install vuex to manage app state: $ npm install vuex --save
 23. Install jspdf and plugin to generate PDF files: $ npm install jspdf jspdf-autotable
 24. Install xlsx to generate Excel files: $ npm install xlsx
+25. Install channels to integrate websockets into django: $ python -m pip install -U channels
+26. Install redis
 
