@@ -11,12 +11,12 @@ export default new Vuex.Store({
     isAuthenticated: false,
     jwt: localStorage.getItem('token'),
     drawer: null,
+    tour: null,
     endpoints: {
       obtainJWT: apiBaseUrl + 'obtain_token',
       refreshJWT: apiBaseUrl + 'refresh_token',
       baseUrl: apiBaseUrl,
     },
-    totaldevices: null,
   },
   mutations: {
     setAuthProfile(state, {
@@ -35,6 +35,12 @@ export default new Vuex.Store({
       // TODO: For security purposes, take localStorage out of the project.
       localStorage.removeItem('token');
       state.jwt = null;
+    },
+    stateDrawer(state, drawer){
+      state.drawer = drawer
+    },
+    stateTour(state, tour){
+      state.tour = tour
     }
   }
 })

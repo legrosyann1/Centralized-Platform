@@ -7,13 +7,14 @@
     :mini-variant.sync="mini"
     v-model="$store.state.drawer"
   >
-    <v-list nav dense v-if="$store.state.isAuthenticated">
+    <v-list nav dense v-if="$store.state.isAuthenticated" id="v-step-0">
       <v-list-item
         v-for="route in $router.options.routes"
         v-show="route.meta.sidebar != false"
         :key="route.path"
         link
         :to="route.path"
+        :id="route.id"
       >
         <v-list-item-icon>
           <v-icon>{{ route.icon }}</v-icon>
@@ -29,7 +30,7 @@
 
 <script>
 export default {
-  name: "Sidebar",
+  name: "SideBar",
   data () {
     return {
       mini: !this.$vuetify.breakpoint.mdAndDown,

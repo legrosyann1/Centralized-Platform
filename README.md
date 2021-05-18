@@ -23,6 +23,7 @@ REQUIREMENTS:
 - jspdf
 - jspdf-autotable
 - xlsx
+- vue-tour
 
 
 STEPS:
@@ -56,6 +57,7 @@ STEPS:
 22. Install vuex to manage app state: $ npm install vuex --save
 23. Install jspdf and plugin to generate PDF files: $ npm install jspdf jspdf-autotable
 24. Install xlsx to generate Excel files: $ npm install xlsx
-25. Install channels to integrate websockets into django: $ python -m pip install -U channels
+25. Install channels to integrate websockets into django: (backend) $ python -m pip install -U channels
+26. Install vue-tour: $ npm install vue-tour
 26. Install redis
 

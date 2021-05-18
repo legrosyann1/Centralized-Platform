@@ -8,6 +8,7 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
+    id: 'v-step-1',
     meta: {
       requiresAuth: true
     },
@@ -17,6 +18,7 @@ const routes = [
   {
     path: '/change-management',
     name: 'Change Management',
+    id: 'v-step-3',
     meta: {
       requiresAuth: true
     },
@@ -26,6 +28,7 @@ const routes = [
   {
     path: '/devices',
     name: 'Devices',
+    id: 'v-step-5',
     meta: {
       requiresAuth: true
     },
@@ -33,9 +36,29 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Devices.vue')
   },
   {
+    path: '/operations-center',
+    name: 'Operations Center',
+    id: 'v-step-8',
+    meta:{
+      requiresAuth: true
+    },
+    icon: 'mdi-tools',
+    component: () => import(/* webpackChunkName: "action" */ '../views/OperationsCenter.vue'),
+  },
+  {
+    path: '/tower-manager',
+    name: 'Tower Manager',
+    id: 'v-step-9',
+    meta:{
+      requiresAuth: true
+    },
+    icon: 'mdi-ansible',
+    component: () => import(/* webpackChunkName: "tower" */ '../views/TowerManager.vue'),
+  },
+  {
     path: '/networks',
     name: 'Network Addressing',
-    id: 'v-step-11',
+    id: 'v-step-10',
     meta:{
       requiresAuth: true
     },
@@ -45,6 +68,7 @@ const routes = [
   {
     path: '/email',
     name: 'Email',
+    id: 'v-step-11',
     meta: {
       requiresAuth: true
     },
@@ -54,6 +78,7 @@ const routes = [
   {
     path: '/about',
     name: 'About',
+    id: 'v-step-12',
     meta: {
       requiresAuth: true
     },

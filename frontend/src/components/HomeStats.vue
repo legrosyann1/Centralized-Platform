@@ -11,6 +11,7 @@
           v-bind:value='devices'
           sub-icon="mdi-clock"
           sub-text="Just Updated"
+          id="v-step-2"
         />
       </v-col>
         
@@ -120,6 +121,9 @@ data: () => ({
   },
   mounted() {
     this.animation();
+    if(this.$store.state.tour == true){
+      this.$tours['myTour'].start()
+    }
   },
 
   methods:{

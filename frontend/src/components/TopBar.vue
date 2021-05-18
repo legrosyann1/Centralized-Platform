@@ -18,61 +18,29 @@
       </router-link>
     </div>
     <v-spacer></v-spacer>
-    <div v-if="$store.state.isAuthenticated">
-      <v-menu 
-        offset-y
-        open-on-hover
-        close-on-content-click
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn 
-            text 
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-account</v-icon>
-            {{ $store.state.authProfile.user.username}}
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-          v-for="(item, index) in items_btn"
-          :key="index">
-            <v-list-item-title>
-              <v-btn
-                text 
-                @click="click_btn(item)"
-                right
-              >
-              {{ item.title }}
-              </v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+    <div>
+      <v-btn @click="startTour" v-if="$store.state.isAuthenticated" id="v-step-13" icon>
+        <v-icon>mdi-help-circle-outline</v-icon>
+      </v-btn>
     </div>
+    <div v-if="$store.state.isAuthenticated" class="mr-8 ml-4 text-button">
+      <v-icon>mdi-account</v-icon>
+      {{ $store.state.authProfile.user.first_name.substring(0,1) }}{{ $store.state.authProfile.user.last_name.substring(0,1) }}
+    </div>
+    <Logout/>
   </v-app-bar>
 </template>
 
 <script>
+import Logout from "./Logout.vue";
 export default {
   name: "TopBar",
-  data() {
-    return{
-      items_btn: [{ title: "Preferences" }, { title: "Logout" }]
-    }
-    
+  components: {
+    Logout,
   },
   methods: {
-    click_btn(item){
-      if(item.title == 'Logout'){
-        this.$store.commit('setAuthProfile', {
-          "authProfile": null,
-          "isAuthenticated": false
-        });
-        this.$store.commit('removeToken');
-        this.$router.push({name: 'Login'})
-      }
+    startTour(){
+      this.$tours['myTour'].start()
     }
   },
 };

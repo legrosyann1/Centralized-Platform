@@ -60,11 +60,12 @@
           <!-- Icon to select columns to display -->
           <template v-slot:header.data-table-expand="">
             <v-btn
-                @click="dialog_costumHeaders = true"
-                icon
-              >
-                <v-icon small color="primary">mdi-pencil</v-icon>
-              </v-btn>
+              @click="dialog_costumHeaders = true"
+              icon
+              id="v-step-6"
+            >
+              <v-icon small color="primary">mdi-pencil</v-icon>
+            </v-btn>
           </template>
           
 
@@ -367,6 +368,7 @@
               v-on="on"
               class="animacion"
               small
+              id="v-step-7"
             >
               Export to
               <v-icon id="exportIcon">mdi-export</v-icon>

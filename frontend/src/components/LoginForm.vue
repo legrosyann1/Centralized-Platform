@@ -127,6 +127,7 @@ export default {
                 "authProfile": profile,
                 "isAuthenticated": true
               });
+              vm.$store.commit('stateTour', profile.viewTour);
               vm.$router.push({name: 'Home'})
             })
         })
