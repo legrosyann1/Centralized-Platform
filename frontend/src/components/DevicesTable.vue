@@ -85,7 +85,7 @@
                     </v-chip>
                   </v-row>
                 </div>
-              <div v-else class="text-body-2 mt-3">This device don't have any logical partition</div>
+              <div v-else class="text-body-2 mt-3">This device doesn't have any logical partition</div>
               <v-btn
                 class="mb-3"
                 small
@@ -137,6 +137,12 @@
             </v-tooltip>
           </template>
         </v-data-table>
+
+        <template #item.data-table-expand="{expand, isExpanded, item}">
+          <v-icon @click.stop="expand(!isExpanded)" :color="item.logic_partition.length === 0? 'secondary' : 'primary'" id="v-step-7">
+            $expand
+          </v-icon>
+        </template>
 
         <!-- Dialog for Costumizing Columns -->
         <v-dialog v-model="dialog_costumHeaders" max-width="700px">
@@ -368,7 +374,6 @@
               v-on="on"
               class="animacion"
               small
-              id="v-step-7"
             >
               Export to
               <v-icon id="exportIcon">mdi-export</v-icon>
