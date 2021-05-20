@@ -87,18 +87,47 @@
 
                       <v-col cols="12" sm="8" md="6">
                         <v-text-field
-                        v-model='environment'
+                          v-model='environment'
                           label="Environment"
                           type="text"
                         ></v-text-field>
                       </v-col>
 
                       <v-col cols="12" sm="8" md="6">
-                        <v-text-field
+                        <v-autocomplete
                           v-model="requester"
-                          label="Requestor"
-                          type="text"
-                        ></v-text-field>
+                          :items="users"
+                          item-value="username"
+                          label="Requester"
+                          dense 
+                          chips
+                          clearable
+                          class="mt-6"
+                          height="25"
+                        >
+                          <template v-slot:selection="data">
+                            <v-chip
+                              v-bind="data.attrs"
+                              :input-value="data.selected"
+                              @click="data.select"
+                              small
+                              class="mb-2"
+                            >
+                              <v-avatar left :style="{'background-color':data.item.color}">
+                                <span class="white--text text-xs">{{ data.item.first_name.substring(0,1) }}{{ data.item.last_name.substring(0,1) }}</span>
+                              </v-avatar>
+                              {{ data.item.username }}
+                            </v-chip>
+                          </template>
+                          <template v-slot:item="data">
+                            <v-list-item-avatar :style="{'background-color':data.item.color}" size="25">
+                              <span class="white--text text-xs">{{ data.item.first_name.substring(0,1) }}{{ data.item.last_name.substring(0,1) }}</span>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                              <v-list-item-text class="text-xs">{{ data.item.username }}</v-list-item-text>
+                            </v-list-item-content>
+                          </template>
+                        </v-autocomplete>
                       </v-col>
 
                       <v-col cols="12" sm="7" md="5">
@@ -354,6 +383,7 @@ export default {
     },
     events: [],
     // New task related
+    users: [],
     start_date:'',
     end_date:'',
     start_time:'',
@@ -387,8 +417,9 @@ export default {
     selectedOpenFuture: false,
   }),
   mounted() {
-    this.getChanges();
     this.loading = true;
+    this.getChanges();
+    this.getUsers();
   },
 
   methods: {
@@ -643,7 +674,7 @@ export default {
       formData.append('implementer',this.implementer)
       formData.append('state',this.state)
       formData.append('requester',this.requester)
-    
+
       if(!event.task.id){
         http
         .post("/changes/", formData)
@@ -726,6 +757,26 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+
+    getUsers() {
+      var vm = this;
+      http
+        .get("/users")
+        .then(function (response) {
+          for(var i=0; i<response.data.length; i++){
+            var user = {
+              'username': response.data[i].user.username, 
+              'first_name': response.data[i].user.first_name, 
+              'last_name': response.data[i].user.last_name,
+              'color': "#" + ("000000" + Math.floor(Math.random() * 16777216).toString(16)).substr(-6)
+            }
+            vm.users.push(user)
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     
     showEvent({ nativeEvent, event }) {
