@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from rest_framework_jwt.views import refresh_jwt_token, obtain_jwt_token
+from actions.views import ScheduledTaskViewSet
 from .views import UserViewSet, GroupViewSet, EmailViewSet, MetricsViewSet
 from inventory.views import DevicesViewSet, DeviceCommentsViewSet, DeviceChangesViewSet, FutureChangesViewSet, NetworksViewSet
 
@@ -13,6 +14,7 @@ router.register(r'devicesComments', DeviceCommentsViewSet)
 router.register(r'devicesChanges', DeviceChangesViewSet)
 router.register(r'changes', FutureChangesViewSet)
 router.register(r'networks', NetworksViewSet)
+router.register(r'tasks', ScheduledTaskViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

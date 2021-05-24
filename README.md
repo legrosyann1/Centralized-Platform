@@ -63,3 +63,8 @@ STEPS:
 27. Install celery: (backend) $ pip install celery
 26. Install redis
 
+
+if any problems run: sudo apt install libpq-dev python3-dev
+
+- connect to postgres
+- create superuser

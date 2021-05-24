@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from actions.models import Action, LogAction
 from django.contrib.auth.models import User
+from celery import shared_task
 #import ansible_runner
 import pathlib
 from channels.layers import get_channel_layer
@@ -23,3 +24,9 @@ def write_to_channel(resp):
         'type': 'send.actions',
         'resp': resp
         })
+
+
+@shared_task
+def hello():
+    # Do heavy computation with variables in setup model here.
+    print('Running task for setup')

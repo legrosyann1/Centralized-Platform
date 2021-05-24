@@ -42,15 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third party apps
+    'django_celery_beat',
+    'django_celery_results',
+    'rest_framework',
+    'corsheaders',
+    'channels',
     # Platform apps
     'inventory',
     'api',
     'actions',
     'websockets',
-    # Third party apps
-    'rest_framework',
-    'corsheaders',
-    'channels',
 ]
 
 MIDDLEWARE = [
@@ -188,3 +190,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# Celery
+CELERY_RESULT_BACKEND="django-db"
+BROKER_URL = "redis://127.0.0.1:6379"
+CELERY_TIMEZONE = 'Europe/Madrid'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
