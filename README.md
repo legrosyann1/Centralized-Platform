@@ -11,6 +11,7 @@ REQUIREMENTS:
 - django-cors-headers
 - djangorestframework-jwt
 - channels
+- celery
 - redis
 
 - Node.js/npm
@@ -59,5 +60,6 @@ STEPS:
 24. Install xlsx to generate Excel files: $ npm install xlsx
 25. Install channels to integrate websockets into django: (backend) $ python -m pip install -U channels
 26. Install vue-tour: $ npm install vue-tour
+27. Install celery: (backend) $ pip install celery
 26. Install redis
 

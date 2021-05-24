@@ -76,6 +76,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Email.vue')
   },
   {
+    path: '/scheduler',
+    name: 'Scheduler',
+    id: 'v-step-14',
+    meta: {
+      requiresAuth: true
+    },
+    icon: 'mdi-information-outline',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Scheduler.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     id: 'v-step-12',
