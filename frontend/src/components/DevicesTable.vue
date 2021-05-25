@@ -37,7 +37,7 @@
           show-expand
         >
           <!-- set status -->
-          <template v-slot:item.status="{ item }">
+          <template v-slot:[`item.status`]="{ item }">
               <v-btn
                 :id="item"
                 @click="dialogStatus(item)"
@@ -50,15 +50,15 @@
           </template>
 
           <!-- Change date format -->
-          <template v-slot:item.sw_end_of_life="{ item }">
+          <template v-slot:[`item.sw_end_of_life`]="{ item }">
             {{ item.sw_end_of_life.substr(0, 10) }}
           </template>
-          <template v-slot:item.hw_end_of_life="{ item }">
+          <template v-slot:[`item.hw_end_of_life`]="{ item }">
             {{ item.hw_end_of_life.substr(0, 10) }}
           </template>
 
           <!-- Icon to select columns to display -->
-          <template v-slot:header.data-table-expand="">
+          <template v-slot:[`header.data-table-expand`]="">
             <v-btn
               @click="dialog_costumHeaders = true"
               icon
@@ -102,7 +102,7 @@
           </template>
 
           <!--  when you click on any icon, one dialog is showed  -->
-          <template #item.actions="{ item }">
+          <template #[`item.actions`]="{ item }">
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn color="primary" v-bind="attrs" v-on="on" icon>
@@ -138,7 +138,7 @@
           </template>
         </v-data-table>
 
-        <template #item.data-table-expand="{expand, isExpanded, item}">
+        <template #[`item.data-table-expand`]="{expand, isExpanded, item}">
           <v-icon @click.stop="expand(!isExpanded)" :color="item.logic_partition.length === 0? 'secondary' : 'primary'" id="v-step-7">
             $expand
           </v-icon>
@@ -269,7 +269,7 @@
                 hide-default-footer
                 class="elevation-1"
               >
-                <template v-slot:item.user="{ item }">
+                <template v-slot:[`item.user`]="{ item }">
                   <v-avatar color="indigo" size="30">
                     <span class="white--text headline">{{
                       item.user.substr(0, 1)
@@ -278,11 +278,11 @@
                   </v-avatar>
                 </template>
               
-                <template v-slot:item.delete="{ item }">
+                <template v-slot:[`item.delete`]="{ item }">
                   <v-icon v-if="item.delete === $store.state.authProfile.user.username" @click="deleteComment(item)">mdi-close-circle-outline</v-icon>
                 </template>
 
-                <template v-slot:item.comment="{ item }">
+                <template v-slot:[`item.comment`]="{ item }">
                   <v-edit-dialog
                     :return-value.sync="item.comment"
                     large

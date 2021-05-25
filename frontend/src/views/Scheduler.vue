@@ -1,11 +1,15 @@
 <template>
   <div class="scheduler">
-    <div class="text-h4 mb-6">{{this.$route.name}}</div>
+    <TaskScheduler/>
   </div>
 </template>
 
 <script>
+import TaskScheduler from '@/components/TaskScheduler.vue'
 export default {
   name: 'Scheduler',
+  components: {
+    TaskScheduler
+  }
 }
 </script>
