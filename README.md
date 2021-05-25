@@ -65,6 +65,9 @@ STEPS:
 
 
 if any problems run: sudo apt install libpq-dev python3-dev
+                     npm install -g n
+                     n lts
 
 - connect to postgres
 - create superuser
+- npm install

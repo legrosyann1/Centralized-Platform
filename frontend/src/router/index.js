@@ -82,7 +82,7 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    icon: 'mdi-information-outline',
+    icon: 'mdi-clock-outline',
     component: () => import(/* webpackChunkName: "about" */ '../views/Scheduler.vue')
   },
   {

@@ -13,6 +13,7 @@
     "gsap": "^3.6.0",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
+    "node-ipc": "^9.1.4",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vue-tour": "^2.0.0",
@@ -21,18 +22,19 @@
     "xlsx": "^0.16.9"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "^4.5.11",
-    "@vue/cli-service": "^4.5.13",
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "^5.0.0-beta.1",
+    "@vue/cli-plugin-eslint": "^5.0.0-beta.1",
+    "@vue/cli-plugin-router": "^5.0.0-beta.1",
+    "@vue/cli-service": "^5.0.0-beta.1",
     "axios": "^0.21.1",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint": "^7.20.0",
+    "eslint-plugin-vue": "^7.6.0",
     "sass": "^1.32.0",
     "sass-loader": "^10.0.0",
     "vue-cli-plugin-axios": "0.0.4",
-    "vue-cli-plugin-vuetify": "~2.2.2",
+    "vue-cli-plugin-vuetify": "^2.4.0",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.7.0"
   },
@@ -46,7 +48,7 @@
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@babel/eslint-parser"
     },
     "rules": {}
   },

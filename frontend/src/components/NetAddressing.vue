@@ -34,7 +34,7 @@
         >
 
           <!--  Endpoint dialog  -->
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn color="primary" v-bind="attrs" v-on="on" icon id="v-step-12">
