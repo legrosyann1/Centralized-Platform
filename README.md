@@ -71,3 +71,10 @@ if any problems run: sudo apt install libpq-dev python3-dev
 - connect to postgres
 - create superuser
 - npm install
+
+
+Install ansible (not Windows):
+    $ sudo apt update
+    $ sudo apt install software-properties-common
+    $ sudo add-apt-repository --yes --update ppa:ansible/ansible
+    $ sudo apt install ansible
