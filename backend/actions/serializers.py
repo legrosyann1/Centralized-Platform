@@ -1,12 +1,19 @@
 from rest_framework import serializers
 from actions.models import LogAction, Action, ScheduledTask
 from django.contrib.auth.models import User
+import os
+import pathlib
 
 class ActionSerializer(serializers.ModelSerializer):
-    template = serializers.FileField(use_url=False, required=True)
     class Meta:
         model = Action
         fields = '__all__'
+    
+    def validate_template(self, value):
+        path = str(pathlib.Path(__file__).parent.absolute() / 'ansible' / 'project') + os.sep + value
+        if not os.path.isfile(path):
+            raise serializers.ValidationError("Invalid template, must be previously created in ansible folder")
+        return value
 
 class LogActionSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())

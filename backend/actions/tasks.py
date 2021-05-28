@@ -29,7 +29,6 @@ def write_to_channel(resp):
 
 @shared_task
 def helloWorld():
-    # Do heavy computation with variables in setup model here.
     print('Hello World!')
 
 @shared_task()

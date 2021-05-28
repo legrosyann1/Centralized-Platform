@@ -16,12 +16,10 @@ class ActionsConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add('actions', self.channel_name)
             await self.accept()
 
-
     async def disconnect(self, code):
         ''' When a client disconnect from websocket unsubscribe it from the group '''
         await self.channel_layer.group_discard('actions', self.channel_name)
 
-    
     async def receive(self, text_data):
         data_json = json.loads(text_data)
         actions = data_json.get('actions')
@@ -36,9 +34,9 @@ class ActionsConsumer(AsyncWebsocketConsumer):
                 await self.send(json.dumps(ret))
 
     
-#    async def send_actions(self, event):
-#        ''' This function receives event as a type: 'update.devices' and the list of updated devices '''
-#        await self.send(text_data=json.dumps({
-#            'type': event['type'],
-#            'resp' : event['resp']
-#        }))
+    async def send_actions(self, event):
+        ''' This function receives event as a type: 'update.devices' and the list of updated devices '''
+        await self.send(text_data=json.dumps({
+            'type': event['type'],
+            'resp' : event['resp']
+        }))
