@@ -89,7 +89,7 @@ export default {
     return {
         dialog: false,
         details_items: [],
-        interface_items: null,
+        interface_items: [],
         details_except: ['id', 'created_at', 'updated_at', 'logic_partition', 'actions', 'interfaces'],
         interface_headers: [
           { text: "Name", value: "name" },

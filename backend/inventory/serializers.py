@@ -2,9 +2,24 @@ from .models import Device, DeviceComment, LogicPartition, Change, FutureChange,
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+class LogicPartitionListSerializer(serializers.ListSerializer):
+    def create(self, validated_data):
+        ''' This functions makes sure that logic partitions with the same name are not created again but assigned to other devices
+            It is different than unique field in models because the user can enter the same name '''
+        partitions = []
+        for partition in validated_data:
+            part_obj = LogicPartition.objects.filter(name=partition['name']).first()
+            if part_obj is None:
+                newpart = LogicPartition.objects.create(name=partition['name'])
+                partitions.append(newpart)
+            else:
+                partitions.append(part_obj)
+        return partitions
+
 class LogicPartitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LogicPartition
+        list_serializer_class = LogicPartitionListSerializer
         fields = '__all__'
 
 class InterfaceSerializer(serializers.ModelSerializer):
@@ -44,6 +59,7 @@ class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
         list_serializer_class = DeviceListSerializer
+        depth = 1
         exclude = ['created_at']
         
 

@@ -19,7 +19,7 @@
     </div>
     <v-spacer></v-spacer>
     <div>
-      <v-btn @click="startTour" v-if="$store.state.isAuthenticated" id="v-step-13" icon>
+      <v-btn @click="startTour" v-if="$store.state.isAuthenticated" id="v-step-14" icon>
         <v-icon>mdi-help-circle-outline</v-icon>
       </v-btn>
     </div>

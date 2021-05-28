@@ -34,7 +34,8 @@ class LogAction(models.Model):
 
 class ScheduledTask(models.Model):
     title_choices = [
-        ('hello', 'Hello')
+        ('helloWorld', 'Hello World'),
+        ('getWeeklyChanges', 'Weekly changes in all devices')
     ]
     title = models.CharField(max_length=70, choices=title_choices)
     enabled = models.BooleanField(default=False)

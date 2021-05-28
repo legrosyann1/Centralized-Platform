@@ -6,9 +6,7 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 @receiver(pre_save, sender=ScheduledTask)
 def updateScheduledTask(sender, instance, **kwargs):
-    print('here')
     minute, hour, day_of_week, day_of_month = parse_time(instance.time)
-    print(instance.id)
     if instance.id is not None:
         schedtask = ScheduledTask.objects.get(id=instance.id)
         task = schedtask.task

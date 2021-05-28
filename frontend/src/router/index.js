@@ -46,16 +46,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "action" */ '../views/OperationsCenter.vue'),
   },
   {
-    path: '/tower-manager',
-    name: 'Tower Manager',
-    id: 'v-step-9',
-    meta:{
-      requiresAuth: true
-    },
-    icon: 'mdi-ansible',
-    component: () => import(/* webpackChunkName: "tower" */ '../views/TowerManager.vue'),
-  },
-  {
     path: '/networks',
     name: 'Network Addressing',
     id: 'v-step-10',
@@ -66,19 +56,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "tower" */ '../views/Networks.vue'),
   },
   {
-    path: '/email',
-    name: 'Email',
-    id: 'v-step-11',
-    meta: {
-      requiresAuth: true
-    },
-    icon: 'mdi-email',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Email.vue')
-  },
-  {
     path: '/scheduler',
     name: 'Scheduler',
-    id: 'v-step-14',
+    id: 'v-step-11',
     meta: {
       requiresAuth: true
     },
@@ -86,9 +66,19 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Scheduler.vue')
   },
   {
+    path: '/email',
+    name: 'Email',
+    id: 'v-step-12',
+    meta: {
+      requiresAuth: true
+    },
+    icon: 'mdi-email',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Email.vue')
+  },
+  {
     path: '/about',
     name: 'About',
-    id: 'v-step-12',
+    id: 'v-step-13',
     meta: {
       requiresAuth: true
     },

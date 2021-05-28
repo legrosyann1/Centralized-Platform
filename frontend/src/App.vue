@@ -101,11 +101,11 @@ export default {
         },
         {
           target: '#v-step-9',
-          content: 'This page connects to Ansible Tower'
+          content: 'Characteristics about addressing in the network can be found in this section'
         },
         {
           target: '#v-step-10',
-          content: 'Characteristics about addressing in the network can be found in this section'
+          content: 'You can schedule tasks here'
         },
         {
           target: '#v-step-11',
@@ -121,7 +121,7 @@ export default {
         },
       ],
       drawerSteps: [0,1,3,5,8,9,10,11,12],
-      drawerName: ['None', 'Home', 'Change Management', 'Devices', 'Operations Center', 'Tower Manager', 'Network Addressing', 'Email', 'About']
+      drawerName: ['None', 'Home', 'Change Management', 'Devices', 'Operations Center', 'Network Addressing', 'Scheduler', 'Email', 'About']
     }
   },
   computed:{

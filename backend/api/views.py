@@ -38,8 +38,14 @@ class EmailViewSet(APIView):
     def post(self, request):
         """Sends email, can contain files attached to it"""
         email = Email()
-        file = request.data['files']
-        resp = email.send(os.getenv("EMAIL_USER"), request.data['subject'], request.data['body'], file, file.name)
+        isfile = request.data['isfile']
+        
+        if not isfile:
+            file = request.data['files']
+            resp = email.send(os.getenv("EMAIL_USER"), request.data['subject'], request.data['body'], file=file, filename=file.name)
+        else:
+            resp = email.send(os.getenv("EMAIL_USER"), request.data['subject'], request.data['body'])
+
         if resp == '1':
             return Response('200')
         else:

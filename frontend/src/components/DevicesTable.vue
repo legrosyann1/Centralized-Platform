@@ -73,13 +73,13 @@
           <template v-slot:expanded-item="{ headers, item }">
             <td :colspan="headers.length">
               <div v-if="item.logic_partition.length > 0">
-                <div class="text-h6 mt-6">Logical Partitions</div>
-                  <v-row class="ma-3">
+                <div class="text-sm-h6 mt-3">Logical Partitions</div>
+                  <v-row class="ma-3 mt-1">
                     <v-chip
-                      class="ma-2"
                       label
                       v-for="partition in item.logic_partition" 
                       :key="partition.id"
+                      class="mr-2"
                     >
                       {{ partition.name }}
                     </v-chip>
@@ -138,8 +138,8 @@
           </template>
         </v-data-table>
 
-        <template #[`item.data-table-expand`]="{expand, isExpanded, item}">
-          <v-icon @click.stop="expand(!isExpanded)" :color="item.logic_partition.length === 0? 'secondary' : 'primary'" id="v-step-7">
+        <template #[`item.data-table-expand`]="{ expand, isExpanded, item }">
+          <v-icon @click.stop="expand(!isExpanded)" id="v-step-7" :color="item.logic_partition.length == 0? 'green' : 'blue'">
             $expand
           </v-icon>
         </template>
@@ -334,7 +334,7 @@
       <!-- dialog for partitions -->
       <v-dialog
         v-model="dialog_partitions"
-        max-width="400px"
+        max-width="500px"
       >
         <v-card>
           <v-card-title>
@@ -349,8 +349,11 @@
                   multiple
                   chips
                 ></v-combobox>
+              </v-row>
+              <v-row>
+                <span class="text-caption red--text lighten-1 mt-n3">* Hit Enter to add partition before saving *</span>
+                <v-spacer></v-spacer>
                 <v-btn
-                  class="ma-2"
                   color="success"
                   @click="updatePartitions"
                 >
@@ -790,17 +793,14 @@ export default {
       this.partitions.forEach(element => {
         data.push({name: element})
       });
+      console.log(data)
+      /*
       var vm = this
-      http.post("/devices/" + vm.current_device.id + '/logical_partitions/', data)
+      http.post("/devices/" + this.current_device.id + '/logical_partitions/', data)
         .then(function (response) {
-          vm.current_device.logic_partition = response.data
-        })
-        .catch((e) => {
-          console.log(e);
-          this.error = true;
-          vm.errorMessage = 'Error updating partitions';
-        });
-      vm.dialog_partitions = false;
+            vm.current_device.logic_partition = response.data
+            vm.partition_dialog = false
+          })*/
     },
   },
 };

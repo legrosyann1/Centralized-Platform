@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from actions.models import Action, LogAction
+from actions.devicesChangesToExcel import updateDevicesToExcel
 from django.contrib.auth.models import User
 from celery import shared_task
 #import ansible_runner
@@ -27,6 +28,11 @@ def write_to_channel(resp):
 
 
 @shared_task
-def hello():
+def helloWorld():
     # Do heavy computation with variables in setup model here.
-    print('Running task for setup')
+    print('Hello World!')
+
+@shared_task()
+def getWeeklyChanges():
+    result = updateDevicesToExcel().start()
+    return result

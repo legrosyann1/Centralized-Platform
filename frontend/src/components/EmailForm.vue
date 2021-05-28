@@ -48,6 +48,9 @@ export default {
       let formData = new FormData();
       if (vm.file){
         formData.append("files", vm.file, vm.file.name);
+        formData.append("isfile", true)
+      } else {
+        formData.append("isfile", false)
       }
       formData.append("subject", vm.subject);
       formData.append("body", vm.body);
