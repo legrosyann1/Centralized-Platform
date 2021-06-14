@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,6 +8,8 @@ from api.models import UserProfile
 from inventory.models import Device, Change
 from actions.models import Action, ScheduledTask, LogAction
 from .serializers import UserProfileSerializer, GroupSerializer
+from rest_framework.exceptions import PermissionDenied, AuthenticationFailed
+from rest_framework.decorators import action
 from backend.send_mail import Email
 from dotenv import load_dotenv
 from datetime import datetime
@@ -18,18 +20,28 @@ load_dotenv()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(detail=True, methods=['post'])
+    def changePassword(self, request, pk=None):
+        if request.user.is_superuser and request.user.username != request.data['username']:
+            user = User.objects.get(username=request.data['username'])
+        else:
+            user = request.user
+
+        if not user.is_superuser and user.username != request.data['username']:
+            raise PermissionDenied()
+        elif not user.check_password(request.data['password']):
+            raise AuthenticationFailed()
+        else:
+            user.set_password(request.data['new_password'])
+            user.save()
+            return Response("New password was set correctly")
+
 
 class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -39,13 +51,17 @@ class GroupViewSet(viewsets.ModelViewSet):
 class EmailViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
-        """Sends email, can contain files attached to it"""
+        """ Sends email, can contain a file attached to it """
         email = Email()
         isfile = request.data['isfile']
         
         if not isfile:
             file = request.data['files']
-            resp = email.send(os.getenv("EMAIL_USER"), request.data['subject'], request.data['body'], file=file, filename=file.name)
+            resp = email.send(os.getenv("EMAIL_USER"), 
+                              request.data['subject'], 
+                              request.data['body'], 
+                              file=file, 
+                              filename=file.name)
         else:
             resp = email.send(os.getenv("EMAIL_USER"), request.data['subject'], request.data['body'])
 

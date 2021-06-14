@@ -46,6 +46,7 @@ class ScheduledTaskSerializer(serializers.ModelSerializer):
         exclude = ['task']
     
     def validate_time(self, value):
+        error = "Please introduce the schedule with the following format: <mm-hh-dd-mm> where d=dayofweek and m=dayofmonth. If a field is all please use <**>"
         minute = value[0:2]
         hour = value[3:5]
         day_of_week = value[6:8]
@@ -54,8 +55,8 @@ class ScheduledTaskSerializer(serializers.ModelSerializer):
         limits = [59, 24, 7, 28]
         for i, time in enumerate(list):
             if not time.isdigit() and time != '**':
-                raise serializers.ValidationError("Please introduce the schedule with the following format: <mm-hh-dd-mm> where d=dayofweek and m=dayofmonth. If a field is all please use <**>")
+                raise serializers.ValidationError(error)
             elif time.isdigit():
                 if int(time) > limits[i]:
-                    raise serializers.ValidationError("Please introduce the schedule with the following format: <mm-hh-dd-mm> where d=dayofweek and m=dayofmonth. If a field is all please use <**>")
+                    raise serializers.ValidationError(error)
         return value

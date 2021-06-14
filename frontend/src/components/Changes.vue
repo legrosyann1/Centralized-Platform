@@ -94,11 +94,19 @@
                       </v-col>
 
                       <v-col cols="12" sm="8" md="6">
-                        <v-autocomplete
+                        <v-text-field
                           v-model="requester"
+                          label="Requester"
+                          type="text"
+                        ></v-text-field>
+                      </v-col>
+
+                      <v-col cols="12" sm="7" md="5">
+                        <v-autocomplete
+                          v-model="implementer"
                           :items="users"
                           item-value="username"
-                          label="Requester"
+                          label="Implementer"
                           dense 
                           chips
                           clearable
@@ -128,14 +136,6 @@
                             </v-list-item-content>
                           </template>
                         </v-autocomplete>
-                      </v-col>
-
-                      <v-col cols="12" sm="7" md="5">
-                        <v-text-field
-                          v-model="implementer"
-                          label="Implementer"
-                          type="text"
-                        ></v-text-field>
                       </v-col>
 
                       <v-col cols="12" sm="6" md="4">
@@ -188,8 +188,7 @@
                 </v-card-text>
                 <v-card-actions >
                   <v-spacer></v-spacer>
-                  <!-- v-if='start_date && end_date && start_time && end_time && future_change_code && implementer' -->
-                  <v-btn color="primary" @click="saveFutureTask(selectedEvent)">
+                  <v-btn color="primary" @click="saveFutureTask(selectedEvent)" v-if="(start_date && end_date && start_time && end_time && future_change_code && implementer)">
                     Save
                   </v-btn>
                   <v-btn color="red" v-if="selectedEvent.task.id" text @click="deleteFutureTask(selectedEvent)">
@@ -260,15 +259,6 @@
           @click:more="viewDay"
           @click:date="viewDay"
         ></v-calendar>
-        <!--v-dialog
-          v-model='selectedOpenFuture'
-          v-if='selectedOpenFuture'
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          max-width="700"
-        >
-          <span v-html='selectedEvent.start'></span>
-        </v-dialog-->
         <!-- dialog for Automated changes -->
         <v-dialog
           v-model="selectedOpen"
@@ -293,7 +283,7 @@
                     <v-checkbox class='mt-n7 mx-auto'
                       v-model="change_code"
                       label="no code"
-                      value="no code"
+                      value="CH00-00000000"
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="12" class="mt-n2 mb-8" v-show="!edit_change_code && selectedEvent.change_code">
@@ -402,7 +392,7 @@ export default {
     dialog_future_task: false, 
     parse_type:{'Corrective': 'corrective', 'Evolutionary': 'evolutionary', 'Pre-approved': 'pre-approved'},
     parse_state:{'Initial': 'created', 'Pending': 'pending', 'Canceled': 'canceled', 'Completed': 'completed', 'Incompleted': 'incompleted'},
-    // Created task related
+    // Automated task related
     change_code: "",
     changes: [],
     same_changes:[],
@@ -470,7 +460,7 @@ export default {
 
     downloadFile(event){
       http
-      .get("/changes/" + event.task.id + '/downloadFile/', { responseType: 'arraybuffer' })
+      .get("/changes/" + event.task.id + '/downloadFile/', {responseType: 'arraybuffer'})
       .then(function (response) {
           var file = new Blob([response.data])
           var data = URL.createObjectURL(file);

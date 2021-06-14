@@ -113,7 +113,8 @@
               </template>
               <span>Quick actions</span>
             </v-tooltip>
-
+            
+            <!--
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn color="primary" class="mx-n3" v-bind="attrs" v-on="on" icon>
@@ -124,6 +125,7 @@
               </template>
               <span>Database actions</span>
             </v-tooltip>
+            -->
 
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -762,13 +764,11 @@ export default {
       this.current_device = value;
       
       http
-        .get("/devicesComments")
+        .get("/devices/"+ value.id + "/comments")
         .then(function (response) {
           response.data.forEach((element) => {
-            if (element.device == value.id) {
-              element["delete"] = element.user;
-              vm.comment_text.push(element);
-            }
+            element["delete"] = element.user;
+            vm.comment_text.push(element);
           });
         })
         .catch((e) => {
@@ -794,13 +794,13 @@ export default {
         data.push({name: element})
       });
       console.log(data)
-      /*
+      
       var vm = this
       http.post("/devices/" + this.current_device.id + '/logical_partitions/', data)
         .then(function (response) {
             vm.current_device.logic_partition = response.data
             vm.partition_dialog = false
-          })*/
+          })
     },
   },
 };

@@ -23,6 +23,7 @@ def saveChange_before(sender, instance, **kwargs):
             change.save()
    
 
+'''
 @receiver(post_save, sender=Device)
 def saveChange_after(sender, instance, **kwargs):
     new_info = copy.deepcopy(instance.__dict__)
@@ -34,6 +35,7 @@ def saveChange_after(sender, instance, **kwargs):
     if prev is not None:
         prev.date = instance.updated_at
         prev.save()
+'''
 
 def json_serial(obj):
     """JSON serializer for objects not serializable by default json code"""

@@ -89,23 +89,13 @@
             Cancel
           </v-btn>
         </v-stepper-content>
-
-        <!-- STEP 4 -->
-        <v-stepper-step step="4">
-          Result
-        </v-stepper-step>
-        <v-stepper-content step="4">
-          <v-card id="result_container"
-            color="grey lighten-1"
-            class="mb-12"
-            height="200px"
-          ></v-card>
-          <v-btn color="primary" @click="steps = 1; dialog=false">
-            Close
-          </v-btn>
-        </v-stepper-content>
       </v-stepper>
     </v-dialog>
+    <v-snackbar v-model="dialog_result" timeout="10000" app light class="mb-5">
+      <div class="text-center" id="result_container">
+        <v-icon color="success" class="ml-1">mdi-checkbox-marked-circle</v-icon>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 
@@ -129,6 +119,7 @@ export default {
       selectedDevices: [],
       selectedActions: [],
       dialog: false,
+      dialog_result: true,
       steps: 1,
       ws: null,
       loading_logs: false,
@@ -150,8 +141,9 @@ export default {
       vm.ws = new WebSocket(url);
       vm.ws.onmessage = function (resp) {
         console.log(resp.data);
+        vm.dialog_result = true
         var res_container = document.getElementById('result_container')
-        res_container.innerHTML += '<p>' + resp.data + '</p>'
+        res_container.innerHTML += '<span>' + resp.data + '</span>'
       }
     },
 
@@ -207,7 +199,7 @@ export default {
     doAction(){
       console.log(this.selectedDevices)
       console.log(this.selectedActions)
-      this.steps = 4
+      this.dialog = false
       //this.ws.send(JSON.stringify({actions: ['ping'], devices: ['8.8.8.8']}))
       this.ws.send(JSON.stringify({actions: this.selectedActions, devices: this.selectedDevices}))
     },

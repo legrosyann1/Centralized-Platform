@@ -4,8 +4,10 @@ from rest_framework import serializers
 
 class LogicPartitionListSerializer(serializers.ListSerializer):
     def create(self, validated_data):
-        ''' This functions makes sure that logic partitions with the same name are not created again but assigned to other devices
-            It is different than unique field in models because the user can enter the same name '''
+        ''' 
+        This functions makes sure that logic partitions with the same name are not created again
+        but assigned to other devices
+        It is different than unique field in models because the user can enter the same name '''
         partitions = []
         for partition in validated_data:
             part_obj = LogicPartition.objects.filter(name=partition['name']).first()
@@ -31,9 +33,7 @@ class DeviceListSerializer(serializers.ListSerializer):
     def create(self, devices):
         '''
         This function is called when many=True parameter is received. 
-        It gets devices list as a parameter with dict format.
-        It retrieves the actual devices from db and iterate over it's fields 
-        to update this fields
+        It retrieves the actual devices from db and iterate over it's fields to update this fields
         If the device is not created then create a new one.
         '''
         fields = Device._meta.get_fields()
@@ -55,7 +55,6 @@ class DeviceListSerializer(serializers.ListSerializer):
 
 
 class DeviceSerializer(serializers.ModelSerializer):
-    #interfaces = InterfaceSerializer(many=True, read_only=True)
     class Meta:
         model = Device
         list_serializer_class = DeviceListSerializer
@@ -85,6 +84,7 @@ class FutureChangeSerializer(serializers.ModelSerializer):
 
 
 class NetworkSerializer(serializers.ModelSerializer):
+    firewall = serializers.SlugRelatedField(slug_field='name', queryset=Device.objects.all(), allow_null=True)
     class Meta:
         model = Network
         exclude = ['created_at']

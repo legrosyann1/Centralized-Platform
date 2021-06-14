@@ -7,7 +7,7 @@
       <v-file-input chips label="File input" v-model="file"></v-file-input>
       <v-btn :disabled="!isValid" @click="sendEmail">Send</v-btn>
     </v-form>
-    <v-snackbar v-model="result_dialog" :timeout="2000" app light class="mb-5">
+    <v-snackbar v-model="result_dialog" timeout="5000" app light class="mb-5">
       <div class="text-center success--text" v-if="result">
         Email sent succesfully
         <v-icon color="success" class="ml-1">mdi-checkbox-marked-circle</v-icon>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from "../plugins/axios.js";
+import http from "../plugins/axios.js"
 
 export default {
   name: 'EmailForm',
@@ -55,7 +55,7 @@ export default {
       formData.append("subject", vm.subject);
       formData.append("body", vm.body);
 
-      axios
+      http
         .post("/email", formData)
         .then(function (response) {
           if(response.data == 200){
@@ -63,7 +63,6 @@ export default {
           }else if(response.data == 500){
             vm.result = false;
           }
-
           vm.result_dialog = true
           vm.isValid = true
         })

@@ -9,10 +9,7 @@ from wsgiref.util import FileWrapper
 
 
 class DevicesViewSet(viewsets.ModelViewSet):
-    """
-    A simple ViewSet for viewing and editing accounts.
-    """
-    queryset = Device.objects.all()
+    queryset = Device.objects.all().order_by('updated_at')
     serializer_class = DeviceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -62,6 +59,12 @@ class DevicesViewSet(viewsets.ModelViewSet):
             else:
                 return Response(serializer.errors)
 
+    @action(detail=True, methods=['get'])
+    def comments(self, request, pk=None):
+        comments = DeviceComment.objects.filter(device=pk)
+        serializer = CommentsSerializer(comments, many=True)
+        return Response(serializer.data)
+
 
 
 class DeviceCommentsViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
@@ -108,14 +111,13 @@ class FutureChangesViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
         data.delete()
         return Response('200')
 
-    @action(detail=True, methods=['get','post'])
+    @action(detail=True, methods=['get'])
     def downloadFile(self, request, pk=None):
-        if request.method == 'GET':
-            data = FutureChange.objects.get(id=pk)                            
-            wrapper = FileWrapper(open(data.rfc.path, 'rb'))
-            response = HttpResponse(wrapper, content_type='application/force-download')
-            response['Content-Disposition'] = 'inline; filename={}'.format(data.rfc.path)
-            return response
+        data = FutureChange.objects.get(id=pk)                            
+        wrapper = FileWrapper(open(data.rfc.path, 'rb'))
+        response = HttpResponse(wrapper, content_type='application/force-download')
+        response['Content-Disposition'] = 'inline; filename={}'.format(data.rfc.path)
+        return response
 
 
 class NetworksViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from pathlib import Path
 import os
 from django.core.files.storage import FileSystemStorage
+from django.db.models.deletion import SET_NULL
 
 class LogicPartition(models.Model):
     name = models.CharField(max_length=100)
@@ -96,7 +97,7 @@ class FutureChange(models.Model):
     ]
 
     change_code = models.CharField(max_length=13, unique=True) #CH<2digitnumber>-<day><month><year>
-    implementer = models.ForeignKey(User, on_delete=models.CASCADE)
+    implementer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     requester = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     environment = models.CharField(max_length=50, null=True, blank=True)
@@ -117,6 +118,6 @@ class Network(models.Model):
     zone = models.CharField(max_length=150, null=True, blank=True)
     vlan = models.CharField(max_length=100, null=True, blank=True)
     vrf = models.CharField(max_length=100, null=True, blank=True)
-    firewall = models.CharField(max_length=100, null=True, blank=True)
+    firewall = models.ForeignKey(Device, null=True, blank=True, on_delete=SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

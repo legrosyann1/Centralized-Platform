@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from .models import UserProfile
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied, AuthenticationFailed
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,12 +22,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['id', 'viewTour', 'user'] 
 
-
     def create(self, validated_data):
-        user_data = validated_data.pop('user')
-        group_data = user_data.pop('groups')
-        user = User.objects.create(**user_data)  
-        user.set_password(user_data['password'])    
+        data_user = validated_data.pop('user')
+        group_data = data_user.pop('groups')
+        user = User.objects.create(**data_user)  
+        user.set_password(data_user['password'])    
         for group in group_data:
             new_group = Group.objects.get_or_create(name = group)
             user.groups.add(new_group)
@@ -39,30 +39,36 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return profile
 
     def update(self, instance, validated_data):
-        user_data = validated_data.pop('user')
+        data_user = validated_data.pop('user')
         user = instance.user
+        if (self.context['request'].user.is_superuser and 
+            self.context['request'].user.username != data_user['username']):
+            current_user = User.objects.get(username=data_user['username'])
+        else:
+            current_user = self.context['request'].user
+        if (not current_user.is_superuser and 
+            current_user.username != data_user['username']):
+            raise PermissionDenied()
+        elif not current_user.check_password(data_user['password']):
+            raise AuthenticationFailed()
 
         for key in validated_data:
             setattr(instance, key, validated_data[key])
         instance.save()
-
-        for key in user_data:
+        for key in data_user:
             if key == 'groups':
-                for group in user_data[key]:
+                for group in data_user[key]:
                     new_group = Group.objects.get_or_create(name = group)
                     user.groups.add(new_group)
-            elif key == 'id':
+            elif key == 'id' or key == 'password':
                 pass
-            elif key == 'password':
-                user.set_password(user_data[key])
             else:
-                setattr(user, key, user_data[key])
+                setattr(user, key, data_user[key])
         user.save()
-
         return instance
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'

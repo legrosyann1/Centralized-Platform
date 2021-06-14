@@ -22,6 +22,7 @@ class LogAction(models.Model):
 
 
 class ScheduledTask(models.Model):
+    # first item of tuple must be the name of the periodic task
     title_choices = [
         ('helloWorld', 'Hello World'),
         ('getWeeklyChanges', 'Weekly changes in all devices')

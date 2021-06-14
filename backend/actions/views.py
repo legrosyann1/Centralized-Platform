@@ -3,6 +3,7 @@ from actions.models import LogAction, Action, ScheduledTask
 from actions.serializers import LogActionSerializer, ActionSerializer, ScheduledTaskSerializer
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 from rest_framework.response import Response
+from rest_framework import mixins
 
 # Create your views here.
 
@@ -19,7 +20,11 @@ class LogActionsViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class ScheduledTaskViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
+class ScheduledTaskViewSet(mixins.ListModelMixin, 
+                           mixins.RetrieveModelMixin,
+                           mixins.UpdateModelMixin,
+                           mixins.DestroyModelMixin,
+                           viewsets.GenericViewSet):
 
     queryset = ScheduledTask.objects.all()
     serializer_class = ScheduledTaskSerializer
@@ -27,13 +32,21 @@ class ScheduledTaskViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
 
     def list(self, request):
         tasks = ScheduledTask.objects.all()
-        if len(tasks) == 0:
-            titles = ScheduledTask.title_choices
+        titles = ScheduledTask.title_choices
+        if len(tasks) != len(titles):
+            task_titles = []
+            for task in tasks:
+                task_titles.append(task.task.name)
             for title in titles:
-                path_task = 'actions.tasks.' + title[0]
-                schedule, _ = CrontabSchedule.objects.get_or_create(minute='0',hour='8',day_of_week='1',day_of_month='*',month_of_year='*')
-                task = PeriodicTask.objects.create(crontab=schedule, name=title[0], task=path_task, enabled=False)
-                ScheduledTask.objects.create(title=title[0], enabled=False, time='00-08-01-**', task=task)
+                if title[0] not in task_titles:
+                    path_task = 'actions.tasks.' + title[0]
+                    schedule, _ = CrontabSchedule.objects.get_or_create(minute='0',
+                                                                        hour='8',
+                                                                        day_of_week='1',
+                                                                        day_of_month='*',
+                                                                        month_of_year='*')
+                    task = PeriodicTask.objects.create(crontab=schedule, name=title[0], task=path_task, enabled=False)
+                    ScheduledTask.objects.create(title=title[0], enabled=False, time='00-08-01-**', task=task)
             tasks = ScheduledTask.objects.all()
         
         serializer = ScheduledTaskSerializer(tasks, many=True)

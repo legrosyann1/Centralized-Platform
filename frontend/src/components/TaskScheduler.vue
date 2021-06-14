@@ -37,14 +37,14 @@
             class="mx-5 mb-4"
             :placeholder="task.time"
             v-else
-            @change="change=true"
+            @change="change=true; current_task=task.id"
           ></v-text-field>
           <v-row>
-            <span class="red--text lighten-2 text-caption ml-8 mt-n3" v-if="!valid">
-              Follow the format: mm-hh-dd-mm<br>where d=dayofweek, m=dayofmonth and **=all
+            <span class="red--text lighten-2 text-caption ml-8 mt-n3" v-if="!valid && task.id==current_task">
+              Follow the format: mm-hh-dd-MM<br>where d=dayofweek, M=dayofmonth and **=all
             </span>
             <v-spacer></v-spacer>
-            <v-card-actions class="mr-5" v-if="change">
+            <v-card-actions class="mr-5" v-if="change && task.id==current_task">
               <v-btn
                 color="primary"
                 text
@@ -74,6 +74,7 @@ export default {
   data () {
     return {
       change: false,
+      current_task: null,
       valid: true,
       tasks: [],
     }
@@ -113,8 +114,6 @@ export default {
       var data = JSON.parse(JSON.stringify(task))
       delete data['change_time']
       delete data['created_at']
-      console.log(data)
-      console.log(this.tasks)
       http
         .put('/tasks/' + data.id + '/', data)
         .then(function (response) {

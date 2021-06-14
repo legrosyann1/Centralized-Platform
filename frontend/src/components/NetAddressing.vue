@@ -315,7 +315,7 @@ export default {
         this.endpoints[10] = this.endpoint.zone;
       }
       if (this.endpoint.fw_source !== ''){
-        this.endpoints[9] = this.endpoint.fw_source;
+        this.endpoints[9] = this.endpoint.firewall;
       }
     },
 
@@ -327,7 +327,7 @@ export default {
         this.endpoints[7] = value.zone;
       }
       if (value.fw_source !== ''){
-        this.endpoints[8] = value.fw_source;
+        this.endpoints[8] = value.firewall;
       }
     },
   },

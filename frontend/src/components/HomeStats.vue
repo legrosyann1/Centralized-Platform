@@ -123,12 +123,12 @@ data: () => ({
     },
     
     parseData(data){
-      this.devices = data['devices']
-      this.eol = data['devicesHWEndOfLife'] + data['devicesSWEndOfLife']
-      this.actions = data['actionsCompleted']
-      this.users = data['users']
-      this.tasks = data['enabledTasks']
-      this.changes = data['untrackedChanges']
+      this.devices = data['devices'].toString()
+      this.eol = (data['devicesHWEndOfLife'] + data['devicesSWEndOfLife']).toString()
+      this.actions = data['actionsCompleted'].toString()
+      this.users = data['users'].toString()
+      this.tasks = data['enabledTasks'].toString()
+      this.changes = data['untrackedChanges'].toString()
     },
 
     animation() {
