@@ -20,7 +20,7 @@ class LogActionSerializer(serializers.ModelSerializer):
     action = ActionSerializer(required=True)
     class Meta:
         model = LogAction
-        fields = '__all__'
+        exclude = ['updated_at']
 
 
 class ChoiceField(serializers.ChoiceField):
@@ -41,6 +41,7 @@ class ChoiceField(serializers.ChoiceField):
 class ScheduledTaskSerializer(serializers.ModelSerializer):
     time = serializers.CharField(max_length=11)
     title = ChoiceField(choices=ScheduledTask.title_choices)
+    admin = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
     class Meta:
         model = ScheduledTask
         exclude = ['task']

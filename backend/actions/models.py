@@ -32,3 +32,4 @@ class ScheduledTask(models.Model):
     time = models.CharField(max_length=11)
     task = models.OneToOneField(PeriodicTask,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

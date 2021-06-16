@@ -3,7 +3,9 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-var apiBaseUrl = 'http://127.0.0.1:8000/api/';
+//var apiBaseUrl = 'http://127.0.0.1:8000/api/';
+var apiBaseUrl = document.location.protocol + '//' + window.location.host.split(':')[0] + ':8000/api'
+var wsBaseUrl = 'ws://' + window.location.host.split(':')[0] + ':8000/ws'
 
 export default new Vuex.Store({
   state: {
@@ -13,9 +15,10 @@ export default new Vuex.Store({
     drawer: null,
     tour: null,
     endpoints: {
-      obtainJWT: apiBaseUrl + 'obtain_token',
-      refreshJWT: apiBaseUrl + 'refresh_token',
+      obtainJWT: apiBaseUrl + '/obtain_token',
+      refreshJWT: apiBaseUrl + '/refresh_token',
       baseUrl: apiBaseUrl,
+      wsBaseUrl: wsBaseUrl,
     },
   },
   mutations: {

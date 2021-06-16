@@ -46,9 +46,9 @@ class updateDevicesToExcel():
             len_columns = []
         writer.save()
 
-    def sendMail(self, path):
+    def sendMail(self, path, addr_to):
         file = open(path + 'weeklyDevicesChanges.xlsx', 'rb')
-        self.email.send(addr_to = 'legrosyann1@gmail.com',
+        self.email.send(addr_to = addr_to,
           subject = 'Updated Weekly Devices',
           body= 'Hi! your excel file with the updated weekly devices is here!',
           file=file,
@@ -56,7 +56,7 @@ class updateDevicesToExcel():
         file.close() 
 
 
-    def start(self):
+    def start(self, email):
         #Init variables
         list_old_data = []
         list_new_data = []
@@ -76,7 +76,7 @@ class updateDevicesToExcel():
 
             dataframe = self.createDataFrame(changes)
             self.saveDataToExcel(path, dataframe)
-            self.sendMail(path)
+            self.sendMail(path, email)
         else:
             self.email.send(addr_to = 'legrosyann1@gmail.com',
                             subject = 'Updated Weekly Devices',

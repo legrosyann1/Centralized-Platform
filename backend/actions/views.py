@@ -2,6 +2,7 @@ from rest_framework import viewsets, generics, permissions
 from actions.models import LogAction, Action, ScheduledTask
 from actions.serializers import LogActionSerializer, ActionSerializer, ScheduledTaskSerializer
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
+from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import mixins
 
@@ -28,13 +29,20 @@ class ScheduledTaskViewSet(mixins.ListModelMixin,
 
     queryset = ScheduledTask.objects.all()
     serializer_class = ScheduledTaskSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [permissions.IsAuthenticated]
+        else:
+            permission_classes = [permissions.IsAdminUser]
+        return [permission() for permission in permission_classes]
 
     def list(self, request):
         tasks = ScheduledTask.objects.all()
         titles = ScheduledTask.title_choices
         if len(tasks) != len(titles):
             task_titles = []
+            admin = User.objects.filter(is_staff=True).first()
             for task in tasks:
                 task_titles.append(task.task.name)
             for title in titles:
@@ -46,7 +54,7 @@ class ScheduledTaskViewSet(mixins.ListModelMixin,
                                                                         day_of_month='*',
                                                                         month_of_year='*')
                     task = PeriodicTask.objects.create(crontab=schedule, name=title[0], task=path_task, enabled=False)
-                    ScheduledTask.objects.create(title=title[0], enabled=False, time='00-08-01-**', task=task)
+                    ScheduledTask.objects.create(title=title[0], enabled=False, time='00-08-01-**', task=task, admin=admin)
             tasks = ScheduledTask.objects.all()
         
         serializer = ScheduledTaskSerializer(tasks, many=True)

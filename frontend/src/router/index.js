@@ -10,7 +10,8 @@ const routes = [
     name: 'Home',
     id: 'v-step-1',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
@@ -20,7 +21,8 @@ const routes = [
     name: 'Change Management',
     id: 'v-step-3',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-calendar-month',
     component: () => import(/* webpackChunkName: "about" */ '../views/ChangeManagement.vue')
@@ -30,7 +32,8 @@ const routes = [
     name: 'Devices',
     id: 'v-step-5',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-cellphone-link',
     component: () => import(/* webpackChunkName: "about" */ '../views/Devices.vue')
@@ -40,7 +43,8 @@ const routes = [
     name: 'Operations Center',
     id: 'v-step-8',
     meta:{
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-tools',
     component: () => import(/* webpackChunkName: "action" */ '../views/OperationsCenter.vue'),
@@ -50,7 +54,8 @@ const routes = [
     name: 'Network Addressing',
     id: 'v-step-10',
     meta:{
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-fire',
     component: () => import(/* webpackChunkName: "tower" */ '../views/Networks.vue'),
@@ -60,7 +65,8 @@ const routes = [
     name: 'Scheduler',
     id: 'v-step-11',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: true,
     },
     icon: 'mdi-clock-outline',
     component: () => import(/* webpackChunkName: "about" */ '../views/Scheduler.vue')
@@ -70,7 +76,8 @@ const routes = [
     name: 'Email',
     id: 'v-step-12',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-email',
     component: () => import(/* webpackChunkName: "about" */ '../views/Email.vue')
@@ -80,7 +87,8 @@ const routes = [
     name: 'About',
     id: 'v-step-13',
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      requiresAdmin: false
     },
     icon: 'mdi-information-outline',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
@@ -90,7 +98,8 @@ const routes = [
     name: 'Login',
     meta: {
       sidebar: false,
-      requiresAuth: false
+      requiresAuth: false,
+      requiresAdmin: false
     },
     icon: 'mdi-login',
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')

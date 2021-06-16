@@ -5,14 +5,37 @@
       :items="logs"
       :items-per-page="5"
       :loading="loading_logs"
-      class="elevation-1"
+      class="elevation-1 mt-2"
+      @click:row="dialogLog"
     >
-      <template #item.updated_at="{value}">
-        {{ formatDate(value) }}
+      <template #[`item.created_at`]="{item}">
+        {{ formatDate(item.created_at) }}
       </template>
     </v-data-table>
+
+    <!-- dialog results Log --->
+    <v-dialog v-model="dialog_log" width="500">
+      <v-card>
+        <v-card-title class="text-h6 grey lighten-2">
+          Result
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="mt-4">
+          The result of {{selectedLog.action.name}} is
+          <v-icon small>mdi-arrow-right-thick</v-icon>
+          {{selectedLog.result}}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red" outlined class="mt-n4 mb-2" @click="dialog_log = false">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-btn
-      class="animacion"
+      class="animacion mt-6"
       color="primary"
       @click="steps=1; dialog=true"
     >
@@ -26,19 +49,22 @@
           <small>You can choose to execute the action in a single device or in group</small>
         </v-stepper-step>
         <v-stepper-content step="1">
-          <v-autocomplete
-            chips
-            clearable
-            multiple
-            small-chips
-            :items="devices"
-            v-model="selectedDevices"
-            :loading="loading"
-          ></v-autocomplete>
-          <v-btn color="primary" @click="steps = 2">
+          <v-form v-model="valid_device">
+            <v-autocomplete
+              chips
+              clearable
+              multiple
+              small-chips
+              :items="devices"
+              :rules="rules"
+              v-model="selectedDevices"
+              :loading="loading"
+            ></v-autocomplete>
+          </v-form>
+          <v-btn color="primary" :disabled="valid_device" class="mr-2" @click="steps = 2">
             Continue
           </v-btn>
-          <v-btn @click="dialog = false" text>
+          <v-btn color="primary" outlined @click="dialog = false">
             Cancel
           </v-btn>
         </v-stepper-content>
@@ -48,19 +74,26 @@
           Choose the action to perform
         </v-stepper-step>
         <v-stepper-content step="2">
-          <v-autocomplete
-            chips
-            clearable
-            multiple
-            small-chips
-            :items="actions"
-            v-model="selectedActions"
-            :loading="loading_actions"
-          ></v-autocomplete>
-          <v-btn color="primary" @click="steps = 3">
+          <v-form v-model="valid_action">
+            <v-autocomplete
+              chips
+              clearable
+              multiple
+              small-chips
+              :items="actions"
+              item-text="name"
+              :rules="rules"
+              v-model="selectedActions"
+              :loading="loading_actions"
+            ></v-autocomplete>
+          </v-form>
+          <v-btn color="primary" :disabled="valid_action" @click="steps = 3">
             Continue
           </v-btn>
-          <v-btn text @click="dialog=false">
+          <v-btn color="primary" class="mx-2" outlined @click="steps = 1">
+            Back
+          </v-btn>
+          <v-btn color="primary" outlined @click="dialog=false">
             Cancel
           </v-btn>
         </v-stepper-content>
@@ -72,35 +105,52 @@
         <v-stepper-content step="3">
           Devices affected
           <v-list-item v-for="device in selectedDevices" v-bind:key="device">
-            <v-list-item-content>
-              <v-list-item-text>{{ device }}</v-list-item-text>
-            </v-list-item-content>
+            <v-list-item-content>- {{ device }}</v-list-item-content>
           </v-list-item>
           Actions to perform
           <v-list-item v-for="action in selectedActions" v-bind:key="action">
-            <v-list-item-content>
-              <v-list-item-text>{{ action }}</v-list-item-text>
-            </v-list-item-content>
+            <v-list-item-content>- {{ action }}</v-list-item-content>
           </v-list-item>
-          <v-btn color="primary" @click="doAction">
-            Confirm and run
-          </v-btn>
-          <v-btn text @click="dialog = false">
-            Cancel
-          </v-btn>
+          <div class="mt-2">
+            <v-btn color="primary" @click="doAction">
+              Confirm and run
+            </v-btn>
+            <v-btn color="primary" class="mx-2" outlined @click="steps = 2">
+              Back
+            </v-btn>
+            <v-btn color="primary" outlined @click="dialog = false">
+              Cancel
+            </v-btn>
+          </div>
         </v-stepper-content>
       </v-stepper>
     </v-dialog>
-    <v-snackbar v-model="dialog_result" timeout="10000" app light class="mb-5">
-      <div class="text-center" id="result_container">
-        <v-icon color="success" class="ml-1">mdi-checkbox-marked-circle</v-icon>
-      </div>
-    </v-snackbar>
+    <template v-for="(response, index) in responses">
+      <v-snackbar :key="index" min-width="800" v-model="dialog_result" multi-line timeout="-1" app light class="mb-5">
+        <v-sheet min-width="450">
+          <v-row justify="start">  
+            <v-col cols="12" md="1" class="text-center">
+              <v-icon color="success" class="mt-2">mdi-checkbox-marked-circle</v-icon>
+            </v-col>
+            <v-col cols="12" md="9" class="text-center">
+              <span>{{response.title}}</span><br>
+              <span>{{response.response}}</span>
+            </v-col>
+            <v-col cols="12" md="1" class="text-center">
+              <v-btn color="red" text plain @click="removeResponse(index)">
+                Close
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-sheet>
+      </v-snackbar>
+    </template>
   </div>
 </template>
 
 <script>
 import http from "../plugins/axios.js";
+import store from "../plugins/vuex.js";
 
 export default {
   name: "Actions",
@@ -109,29 +159,38 @@ export default {
     return {
       headers: [
         {text:'Operation', value: 'action.name'},
-        {text: 'Playbook', value: 'action.template'},
+        {text:'Playbook', value: 'action.template'},
         {text:'User', value: 'user'},
-        {text: 'Execution date', value: 'updated_at'}
+        {text:'Execution date', value: 'created_at'}
+      ],
+      rules: [
+          value => value.length == 0
       ],
       actions: [],
       devices: [],
       logs: [],
       selectedDevices: [],
       selectedActions: [],
+      selectedLog: {'action':''},
+      responses: [],
+      valid_device: false,
+      valid_action: false,
       dialog: false,
-      dialog_result: true,
+      dialog_log: false,
+      dialog_result: false,
       steps: 1,
       ws: null,
+      loading: false,
       loading_logs: false,
       loading_actions: false,
     }
   },
 
-  created (){
+  mounted (){
+    this.initWebsocket();
     this.getLogs()
     this.getDevices();
     this.getActions();
-    this.initWebsocket();
   },
 
   methods: {
@@ -139,15 +198,25 @@ export default {
       var vm = this
       var url = this.$store.state.endpoints.wsBaseUrl + '/actions/'
       vm.ws = new WebSocket(url);
-      vm.ws.onmessage = function (resp) {
-        console.log(resp.data);
-        vm.dialog_result = true
-        var res_container = document.getElementById('result_container')
-        res_container.innerHTML += '<span>' + resp.data + '</span>'
+      vm.ws.onmessage = function (response) {
+        var resp = JSON.parse(response.data)
+        console.log(resp)
+        console.log(resp['type'])
+        if (resp['type'] == 'ack'){
+          if (resp['status'] == 'Accepted'){vm.dialog = false}
+        }
+        else if (resp['type'] == 'resp'){
+          if (resp['status'] == 'successful'){
+            vm.dialog_result = true
+            var dict = {'title':resp['action'],'response':resp['resp']}
+            vm.responses.push(dict)
+          }
+        }
       }
     },
 
     getDevices() {
+      /*
       var vm = this;
       vm.loading = true
       http
@@ -163,7 +232,9 @@ export default {
         .catch((e) => {
           console.log(e);
           vm.loading = false
-        });
+        });*/
+      this.devices=['localhost'];
+      this.loading = false;
     },
 
     getLogs() {
@@ -183,7 +254,7 @@ export default {
 
     getActions() {
       var vm = this;
-      vm.loading = true
+      vm.loading_actions = true
       http
         .get("/actions")
         .then(function (response) {
@@ -197,17 +268,30 @@ export default {
     },
 
     doAction(){
-      console.log(this.selectedDevices)
-      console.log(this.selectedActions)
-      this.dialog = false
-      //this.ws.send(JSON.stringify({actions: ['ping'], devices: ['8.8.8.8']}))
       this.ws.send(JSON.stringify({actions: this.selectedActions, devices: this.selectedDevices}))
     },
 
-    formatDate(updated_at){
-      var date = new Date(updated_at)
+    formatDate(created_at){
+      var date = new Date(created_at)
+      console.log(date.toLocaleString())
       return date.toLocaleString()
     },
+
+    dialogLog(item){
+      this.selectedLog = item
+      this.dialog_log = true
+    },
+
+    removeResponse(index){
+      this.responses.splice(index, 1)
+      if (this.responses.length() == 0){
+        this.dialog_result = false
+      }
+    }
   },
 }
 </script>
+
+<style>
+
+</style>
