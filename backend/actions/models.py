@@ -5,7 +5,7 @@ from django_celery_beat.models import PeriodicTask
 
 class Action(models.Model):
     name = models.CharField(max_length=100)
-    template = models.CharField(max_length=100)
+    template = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return '{} using template {}'.format(self.name, self.template)

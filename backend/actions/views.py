@@ -16,7 +16,7 @@ class ActionsViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
 
 class LogActionsViewSet(viewsets.ModelViewSet, generics.DestroyAPIView):
 
-    queryset = LogAction.objects.all()
+    queryset = LogAction.objects.all().order_by('created_at')
     serializer_class = LogActionSerializer
     permission_classes = [permissions.IsAuthenticated]
 

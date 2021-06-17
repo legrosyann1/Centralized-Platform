@@ -6,15 +6,9 @@ from channels.db import database_sync_to_async
 
 
 class ActionsConsumer(AsyncWebsocketConsumer):
-
     async def connect(self):
         ''' Accept the connection and subscribe the client to the group 'actions' '''
-        #print(self.scope)
-        #print(self.scope['session'])
-        #print(self.scope['user'])
         self.user = self.scope["user"]
-        #print(self.user)
-        #print(self.user.is_authenticated)
         if self.user.is_authenticated:
             await login(self.scope, self.scope['user'])
             await database_sync_to_async(self.scope["session"].save)()
@@ -36,11 +30,9 @@ class ActionsConsumer(AsyncWebsocketConsumer):
                         'devices': devices,
                         'status': 'Accepted' }
                 await self.send(json.dumps(ack))
-                await database_sync_to_async(run_playbook)(self.user.pk, action, devices)
+                database_sync_to_async(run_playbook)(self.user.pk, action, devices)
 
-    
     async def send_actions(self, event):
-        ''' This function receives event as a type: 'update.devices' and the list of updated devices '''
         await self.send(text_data=json.dumps({
             'type': 'resp',
             'status': event['status'],
