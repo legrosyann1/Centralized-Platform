@@ -56,11 +56,11 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
-5. create new database in PostgreSQL 
+5. Create new database in PostgreSQL 
 ```
 CREATE DATABASE <name>
 ```
-6. create .env file and fill variables:
+6. Create .env file and fill variables:
 ```
 SQL_ENGINE=django.db.backends.postgresql_psycopg2
 SQL_DATABASE=
