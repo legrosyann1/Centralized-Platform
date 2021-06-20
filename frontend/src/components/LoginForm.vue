@@ -68,8 +68,8 @@ export default {
   name:"LoginForm",
   data() {
     return {
-      username: 'yannlegros',
-      password: 'Irlanda15',
+      username: '',
+      password: '',
       show: false,
       error: false,
       isAuthenticated: false,
