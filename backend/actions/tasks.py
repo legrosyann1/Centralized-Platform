@@ -4,7 +4,7 @@ from actions.devicesChangesToExcel import updateDevicesToExcel
 from django.contrib.auth.models import User
 from .models import ScheduledTask
 from celery import shared_task
-#import ansible_runner
+import ansible_runner
 import pathlib
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -18,7 +18,7 @@ def run_playbook(user_pk, action_name, devices=[], extravars={}):
         file.write('\n'.join(host_list))
     user = User.objects.get(pk=user_pk)
     action = Action.objects.filter(name=action_name).first() #get action object to retrieve playbook name
-    #r = ansible_runner.run(private_data_dir=pb_path, playbook=action.template, extravars=extravars)
+    r = ansible_runner.run(private_data_dir=pb_path, playbook=action.template, extravars=extravars)
     res = None
     for c in r.events:
         try:
@@ -26,8 +26,8 @@ def run_playbook(user_pk, action_name, devices=[], extravars={}):
         except KeyError:
             pass
     log = LogAction.objects.create(user=user, action=action, result=res)
-    #status = r.status
-    #write_to_channel(status, action_name, res)
+    status = r.status
+    write_to_channel(status, action_name, res)
     return log
 
 def write_to_channel(status, action, resp):

@@ -46,10 +46,7 @@ class DeviceListSerializer(serializers.ListSerializer):
                         setattr(dev_obj, field.name, device[field.name])
                 dev_obj.save()
             else:
-                logPartitions = device.pop('logic_partition')
                 dev_obj = Device.objects.create(**device)
-                for part in logPartitions:
-                    dev_obj.logic_partition.add(part)
             dev_list.append(dev_obj)
         return dev_list
 

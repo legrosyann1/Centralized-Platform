@@ -30,7 +30,7 @@ class ActionsConsumer(AsyncWebsocketConsumer):
                         'devices': devices,
                         'status': 'Accepted' }
                 await self.send(json.dumps(ack))
-                database_sync_to_async(run_playbook)(self.user.pk, action, devices)
+                await database_sync_to_async(run_playbook)(self.user.pk, action, devices)
 
     async def send_actions(self, event):
         await self.send(text_data=json.dumps({

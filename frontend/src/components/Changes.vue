@@ -27,181 +27,6 @@
           >
             Create Task
           </v-btn>
-          <!-- dialog for new tasks -->
-          <v-row justify="center">
-            <v-dialog v-model="dialog_future_task" max-width="600px" >
-              <v-card>
-                <v-card-title>
-                  <span class="headline font-weight-bold">NEW TASK</span>
-                </v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-row class="mb-6">
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field 
-                          v-model="future_change_code"
-                          label="Change Code"
-                          type="text"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col>
-                        <v-text-field
-                          v-model="start_date"
-                          label="Start date"
-                          type="date"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col>
-                        <v-text-field
-                          v-model="start_time"
-                          label="Start time"
-                          type="time"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="4">
-                        <v-autocomplete
-                          v-model="type"
-                          :items="['Corrective', 'Evolutionary', 'Pre-approved']"
-                          label="Type"
-                        ></v-autocomplete>
-                      </v-col>
-
-                      <v-col>
-                        <v-text-field
-                          v-model="end_date"
-                          label="End date"
-                          type="date"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col>
-                        <v-text-field
-                          v-model="end_time"
-                          label="End time"
-                          type="time"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="8" md="6">
-                        <v-text-field
-                          v-model='environment'
-                          label="Environment"
-                          type="text"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="8" md="6">
-                        <v-text-field
-                          v-model="requester"
-                          label="Requester"
-                          type="text"
-                        ></v-text-field>
-                      </v-col>
-
-                      <v-col cols="12" sm="7" md="5">
-                        <v-autocomplete
-                          v-model="implementer"
-                          :items="users"
-                          item-value="username"
-                          label="Implementer"
-                          dense 
-                          chips
-                          clearable
-                          class="mt-6"
-                          height="25"
-                        >
-                          <template v-slot:selection="data">
-                            <v-chip
-                              v-bind="data.attrs"
-                              :input-value="data.selected"
-                              @click="data.select"
-                              small
-                              class="mb-2"
-                            >
-                              <v-avatar left :style="{'background-color':data.item.color}">
-                                <span class="white--text text-xs">{{ data.item.first_name.substring(0,1) }}{{ data.item.last_name.substring(0,1) }}</span>
-                              </v-avatar>
-                              {{ data.item.username }}
-                            </v-chip>
-                          </template>
-                          <template v-slot:item="data">
-                            <v-list-item-avatar :style="{'background-color':data.item.color}" size="25">
-                              <span class="white--text text-xs">{{ data.item.first_name.substring(0,1) }}{{ data.item.last_name.substring(0,1) }}</span>
-                            </v-list-item-avatar>
-                            <v-list-item-content>
-                              <v-list-item-text class="text-xs">{{ data.item.username }}</v-list-item-text>
-                            </v-list-item-content>
-                          </template>
-                        </v-autocomplete>
-                      </v-col>
-
-                      <v-col cols="12" sm="6" md="4">
-                        <v-autocomplete
-                          v-model="state"
-                          :items="['Initial', 'Pending', 'Canceled', 'Completed', 'Incompleted']"
-                          label="Task state"
-                          required
-                        ></v-autocomplete>
-                      </v-col>
-
-                      <v-col cols="12" sm="5" md="3">
-                        <v-autocomplete
-                          v-model="urgent"
-                          :items="['Yes', 'No']"
-                          label="Urgent"
-                          required
-                        ></v-autocomplete>
-                      </v-col>
-
-                      <v-col cols="12">
-                        <v-textarea
-                          v-model="description"
-                          class="mt-n2"
-                          label="Description"
-                          type="text"
-                        ></v-textarea>
-                      </v-col>
-
-                      <v-col cols="12">
-                        <v-file-input
-                          v-if='!file'
-                          label="RFC"
-                          @change='files'>
-                        </v-file-input>
-                        <v-card-text class="mx-n4 mt-n4 mb-n14" v-if='file'>{{file}}
-                          <v-btn
-                            text
-                            @click='downloadFile(selectedEvent)'
-                            icon
-                          >
-                            <v-icon
-                              color='primary'
-                            >mdi-cloud-download</v-icon>
-                          </v-btn>
-                        </v-card-text>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions >
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" @click="saveFutureTask(selectedEvent)" v-if="(start_date && end_date && start_time && end_time && future_change_code && implementer)">
-                    Save
-                  </v-btn>
-                  <v-btn color="red" v-if="selectedEvent.task.id" text @click="deleteFutureTask(selectedEvent)">
-                    Delete
-                  </v-btn>
-                  <v-btn
-                    color="red" @click="dialog_future_task = false">
-                    Close
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
           <v-spacer></v-spacer>
           <v-col cols='7'>
             <v-chip
@@ -261,7 +86,7 @@
         ></v-calendar>
         <!-- dialog for Automated changes -->
         <v-dialog
-          v-model="selectedOpen"
+          v-model="dialog_autmated_task"
           max-width="700"
         >
           <v-card>
@@ -348,7 +173,180 @@
               >
                 Save
               </v-btn>
-              <v-btn color="red" @click="selectedOpen = false"> Close </v-btn>
+              <v-btn color="red" @click="dialog_autmated_task = false"> Close </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- dialog for new tasks -->
+        <v-dialog v-model="dialog_future_task" max-width="600px" >
+          <v-card>
+            <v-card-title>
+              <span class="headline font-weight-bold">NEW TASK</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row class="mb-6">
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field 
+                      v-model="future_change_code"
+                      label="Change Code"
+                      type="text"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col>
+                    <v-text-field
+                      v-model="start_date"
+                      label="Start date"
+                      type="date"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col>
+                    <v-text-field
+                      v-model="start_time"
+                      label="Start time"
+                      type="time"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="4">
+                    <v-autocomplete
+                      v-model="type"
+                      :items="['Corrective', 'Evolutionary', 'Pre-approved']"
+                      label="Type"
+                    ></v-autocomplete>
+                  </v-col>
+
+                  <v-col>
+                    <v-text-field
+                      v-model="end_date"
+                      label="End date"
+                      type="date"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col>
+                    <v-text-field
+                      v-model="end_time"
+                      label="End time"
+                      type="time"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="8" md="6">
+                    <v-text-field
+                      v-model='environment'
+                      label="Environment"
+                      type="text"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="8" md="6">
+                    <v-text-field
+                      v-model="requester"
+                      label="Requester"
+                      type="text"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" sm="7" md="5">
+                    <v-autocomplete
+                      v-model="implementer"
+                      :items="users"
+                      item-value="username"
+                      label="Implementer"
+                      dense 
+                      chips
+                      clearable
+                      class="mt-6"
+                      height="25"
+                    >
+                      <template v-slot:selection="data">
+                        <v-chip
+                          v-bind="data.attrs"
+                          :input-value="data.selected"
+                          @click="data.select"
+                          small
+                          class="mb-2"
+                        >
+                          <v-avatar left :style="{'background-color':data.item.color}">
+                            <span class="white--text text-xs">{{ data.item.first_name.substring(0,1) }}{{ data.item.last_name.substring(0,1) }}</span>
+                          </v-avatar>
+                          {{ data.item.username }}
+                        </v-chip>
+                      </template>
+                      <template v-slot:item="data">
+                        <v-list-item-avatar :style="{'background-color':data.item.color}" size="25">
+                          <span class="white--text text-xs">{{ data.item.first_name.substring(0,1) }}{{ data.item.last_name.substring(0,1) }}</span>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                          <v-list-item-text class="text-xs">{{ data.item.username }}</v-list-item-text>
+                        </v-list-item-content>
+                      </template>
+                    </v-autocomplete>
+                  </v-col>
+
+                  <v-col cols="12" sm="6" md="4">
+                    <v-autocomplete
+                      v-model="state"
+                      :items="['Initial', 'Pending', 'Canceled', 'Completed', 'Incompleted']"
+                      label="Task state"
+                      required
+                    ></v-autocomplete>
+                  </v-col>
+
+                  <v-col cols="12" sm="5" md="3">
+                    <v-autocomplete
+                      v-model="urgent"
+                      :items="['Yes', 'No']"
+                      label="Urgent"
+                      required
+                    ></v-autocomplete>
+                  </v-col>
+
+                  <v-col cols="12">
+                    <v-textarea
+                      v-model="description"
+                      class="mt-n2"
+                      label="Description"
+                      type="text"
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="12">
+                    <v-file-input
+                      v-if='!file'
+                      label="RFC"
+                      @change='files'>
+                    </v-file-input>
+                    <v-card-text class="mx-n4 mt-n4 mb-n14" v-if='file'>{{file}}
+                      <v-btn
+                        text
+                        @click='downloadFile(selectedEvent)'
+                        icon
+                      >
+                        <v-icon
+                          color='primary'
+                        >mdi-cloud-download</v-icon>
+                      </v-btn>
+                    </v-card-text>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions >
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="saveFutureTask(selectedEvent)" v-if="(start_date && end_date && start_time && end_time && future_change_code && implementer)">
+                Save
+              </v-btn>
+              <v-btn color="red" v-if="selectedEvent.task.id" text @click="deleteFutureTask(selectedEvent)">
+                Delete
+              </v-btn>
+              <v-btn
+                color="red" @click="dialog_future_task = false">
+                Close
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -396,15 +394,13 @@ export default {
     change_code: "",
     changes: [],
     same_changes:[],
+    dialog_autmated_task: false,
     // other
     type_taskStatus:['Task completed', 'Task created', 'Task in progress', 'Task canceled', 'Incomplete past task'],
     current_date:'',
     selectedEvent: {name: null, start: null, end: null, color: null, timed: null, change_code: null, task: {}},
     loading: false,
     edit_change_code: false,
-    selectedElement: null,
-    selectedOpen: false,
-    selectedOpenFuture: false,
   }),
   mounted() {
     this.loading = true;
@@ -495,12 +491,12 @@ export default {
         }
         var start = new Date(changes[i].created_at.substring(0, 10) + " " + changes[i].created_at.substring(11, 16));
         if (changes[i].change_code) {color = 'green'}
-        var newtask = {old_info: diff_old, new_info: diff_new, device: changes[i].old_info['name'], id: changes[i].id}
+        var newtask = {old_info: diff_old, new_info: diff_new, device: changes[i].new_info['name'], id: changes[i].id}
         tasks.push(newtask)
         
         // build event and init data
         var newevent = vm.buildEvent(
-          base_name + 'Device ' + changes[i].old_info['name'],
+          base_name + 'Device ' + changes[i].new_info['name'],
           start, start, color, true, changes[i].change_code, tasks)
         tasks = [];
         diff_old = [];
@@ -738,7 +734,7 @@ export default {
         
       }
       this.edit_change_code = false;
-      this.selectedOpen = false;
+      this.dialog_autmated_task = false;
     },
 
     sendChanges(item) {
@@ -771,8 +767,10 @@ export default {
     
     showEvent({ nativeEvent, event }) {
       const open = () => {
+        console.log(event)
         this.selectedEvent = {name: null, start: null, end: null, color: null, timed: null, change_code: null, task: {}}
         if(!event.name.startsWith("Automated change - ")){
+          console.log('future change')
           this.type = event.task.type;
           this.start_date = event.task.start_date;
           this.end_date = event.task.end_date;
@@ -787,6 +785,7 @@ export default {
           this.urgent = event.task.urgent
           this.implementer = event.task.implementer,
           
+          requestAnimationFrame(() => requestAnimationFrame(() => this.dialog_autmated_task = false))
           requestAnimationFrame(() => requestAnimationFrame(() => this.dialog_future_task = true))
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedEvent = event))
         }else{
@@ -794,7 +793,9 @@ export default {
             this.change_code = event.change_code
           }
           this.edit_change_code = false;
-          requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+          console.log('automated change')
+          requestAnimationFrame(() => requestAnimationFrame(() => this.dialog_future_task = false))
+          requestAnimationFrame(() => requestAnimationFrame(() => this.dialog_autmated_task = true))
           requestAnimationFrame(() => requestAnimationFrame(() => this.selectedEvent = event))
         }
       };

@@ -1,6 +1,34 @@
+- make sure log_partitions when creating device
 - Save files in dynamic path
 - change url of RFC to: changes/<pk>/downloadFile
-- in changes: getusers for implementer
+- in changes add devices
+- in changes propose change code
+- in changes make sure when changing state works
 - confirm future change
-- put data with same rfc
-- unit testing ansible: https://docs.ansible.com/ansible/latest/dev_guide/testing_units_modules.html
+- eliminate device
+- action in device section
+- check select networks
+- csrf
+- redis as cache of django
+- add field last_executed in ScheduledTask
+- add list emails field to chose remitent - use user email
+- add users to groups and restrict actions accordingly
+- webhook
+- nginx
+- ansible & redis in windows linux subsystem
+- display list of devices in new action resumen correctly
+- review websockets -> what happens in case of error
+- add device to logaction model
+- schedTask for each user
+- review auth websocket
+- review axios keeping users loged in
+
+
+-> celery -A [project-name] worker --loglevel=info
+   celery -A [project-name] beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+-> ansible-playbook ping.yml -e dst='8.8.8.8'
+
+
+# resultados -> pequeño párrafo y ya está?
+		justificación de que esta en progress?
+# Operations Center -> se conserva aunque solo se hagan operaciones locales, sin tener que cambiar ficheros?
