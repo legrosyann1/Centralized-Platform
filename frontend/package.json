@@ -19,7 +19,7 @@
     "vue-tour": "^2.0.0",
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
